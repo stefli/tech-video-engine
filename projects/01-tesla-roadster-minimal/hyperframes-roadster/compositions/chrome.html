@@ -1,0 +1,42 @@
+<template id="chrome-template">
+  <div data-composition-id="chrome-overlay" data-width="1080" data-height="1920">
+    <style>
+      @font-face {
+        font-family: "NotoSansSC";
+        src: url("../assets/NotoSansSC-VF.ttf") format("truetype");
+        font-weight: 100 900;
+        font-display: block;
+      }
+      [data-composition-id="chrome-overlay"] {
+        position: relative; width: 1080px; height: 1920px; overflow: hidden;
+        pointer-events: none; color: #F3F0E8; font-family: "NotoSansSC", sans-serif;
+      }
+      /* 顶部安全区规范：避开抖音/视频号搜索栏与菜单，top: 160px，仅保留左上角纯粹的栏目标识 */
+      .header-chrome {
+        position: absolute; top: 160px; left: 72px; right: 140px;
+        display: flex; justify-content: space-between; align-items: flex-start;
+      }
+      .header-left { display: flex; align-items: center; gap: 18px; }
+      .header-dot { width: 14px; height: 14px; background: #FF6138; border-radius: 3px; }
+      .header-title { font-size: 38px; font-weight: 900; letter-spacing: 1.5px; }
+      .header-sub { font-size: 24px; font-weight: 700; opacity: 0.85; letter-spacing: 2.0px; margin-top: 4px; color: #E8B45A; }
+    </style>
+    <div class="header-chrome">
+      <div class="header-left">
+        <div class="header-dot"></div>
+        <div>
+          <div id="hdr-title" class="header-title">科技快播</div>
+          <div class="header-sub">前沿科技 · 事实核查</div>
+        </div>
+      </div>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      
+
+      window.__timelines["chrome-overlay"] = tl;
+    </script>
+  </div>
+</template>

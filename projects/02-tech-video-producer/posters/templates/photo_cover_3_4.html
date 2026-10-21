@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>OpenCode 24h AI 攻防 · 小红书爆款封面 (真实图片背景+实心色块大字)</title>
+  <style>
+    :root {
+      --yellow: #ffe600;
+      --red: #ff1e46;
+      --blue: #38bdf8;
+      --dark: #000000;
+      --paper: #ffffff;
+      --font-display: "Impact", "Bahnschrift", sans-serif;
+      --font-cjk: "Microsoft YaHei", "PingFang SC", sans-serif;
+      --font-mono: "Cascadia Mono", "Consolas", monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 2160px;
+      height: 2880px; /* 3:4 Standard Ratio */
+      background: #020409;
+      color: var(--paper);
+      font-family: var(--font-cjk);
+      position: relative;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 1. Real High-Res Photo Background (100% Full Canvas, Crisp and Clear) */
+    .photo-background {
+      position: absolute;
+      inset: 0;
+      background: url("./real_bg_3_4.jpg") center/cover no-repeat;
+      filter: contrast(1.15) saturate(1.2);
+    }
+    /* Subtle readable gradient overlay so text pops, but photo remains clearly visible */
+    .photo-readable-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(2, 4, 10, 0.55) 0%, rgba(2, 4, 10, 0.25) 40%, rgba(2, 4, 10, 0.85) 90%),
+        radial-gradient(circle at 50% 45%, transparent 35%, rgba(2, 4, 10, 0.65) 100%);
+      pointer-events: none;
+    }
+
+    /* Content Layout (Streamlined, Zero Occlusion) */
+    .poster-body {
+      position: absolute;
+      top: 110px;
+      left: 90px;
+      right: 90px;
+      bottom: 90px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 10;
+    }
+
+    /* TIER 4: Badges & Topic Bar (Enhanced Readability: 44px - 48px) */
+    .top-kicker-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+    .kicker-tape {
+      background: var(--red);
+      color: #fff;
+      font-size: 48px;
+      font-weight: 900;
+      padding: 16px 42px;
+      transform: rotate(-2deg);
+      clip-path: polygon(0% 0%, 96% 0%, 100% 100%, 4% 100%);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+      letter-spacing: 0.05em;
+      display: inline-flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .material-svg {
+      width: 52px;
+      height: 52px;
+      fill: currentColor;
+      display: inline-block;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+    .topic-tag {
+      background: #000;
+      color: var(--yellow);
+      font-family: var(--font-mono);
+      font-size: 44px;
+      font-weight: 900;
+      padding: 16px 36px;
+      letter-spacing: 0.12em;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    }
+
+    /* TIER 1: Hero Impact Headlines (130px - 180px) */
+    .headline-group {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 26px;
+      margin-top: 14px;
+      width: 100%;
+    }
+    .main-title-lead {
+      font-family: var(--font-cjk);
+      font-size: 130px;
+      font-weight: 900;
+      line-height: 1;
+      color: #ffffff;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 14px 40px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      letter-spacing: -0.02em;
+    }
+    .color-block-yellow {
+      display: inline-block;
+      background: var(--yellow);
+      color: #000000;
+      font-size: 180px;
+      font-weight: 900;
+      line-height: 1.05;
+      padding: 22px 52px;
+      transform: rotate(-2deg) skewX(-3deg);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+      letter-spacing: -0.02em;
+    }
+    .color-block-red {
+      display: inline-block;
+      background: var(--red);
+      color: #ffffff;
+      font-size: 160px;
+      font-weight: 900;
+      line-height: 1.05;
+      padding: 20px 50px;
+      transform: rotate(1.2deg) skewX(2deg);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+      letter-spacing: -0.02em;
+    }
+
+    /* TIER 3: Core Statement Strip (Enlarged to 56px) */
+    .narrative-strip {
+      background: rgba(4, 7, 16, 0.92);
+      padding: 34px 46px;
+      margin: 8px 0;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+    }
+    .narrative-strip p {
+      font-size: 56px;
+      font-weight: 900;
+      line-height: 1.35;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .narrative-strip p span {
+      color: var(--yellow);
+    }
+    .narrative-strip p em {
+      color: var(--red);
+      font-style: normal;
+    }
+
+    /* TIER 2 & TIER 3: Telemetry Cards (Big Number 116px + Enlarged Label 48px + Desc 46px) */
+    .telemetry-row {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 32px;
+      width: 100%;
+      margin: 8px 0;
+    }
+    .telemetry-box {
+      background: rgba(15, 23, 42, 0.95);
+      padding: 42px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+    }
+    .telemetry-box.red-theme {
+      background: #1c080e;
+    }
+    .telemetry-box.blue-theme {
+      background: #08172c;
+    }
+    .telemetry-label {
+      font-family: var(--font-mono);
+      font-size: 48px;
+      font-weight: 800;
+      color: #cbd5e1;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .telemetry-num {
+      font-family: var(--font-display);
+      font-size: 116px;
+      font-weight: 900;
+      line-height: 0.95;
+      color: #ffffff;
+    }
+    .telemetry-num.red { color: var(--red); }
+    .telemetry-num.blue { color: var(--blue); }
+    .telemetry-sub {
+      font-size: 46px;
+      color: #f1f5f9;
+      margin-top: 14px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    /* TIER 4: Bottom Banner (Enlarged to 52px) */
+    .bottom-solid-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--yellow);
+      color: #000000;
+      padding: 32px 48px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+      width: 100%;
+    }
+    .bottom-title {
+      font-size: 52px;
+      font-weight: 900;
+      letter-spacing: 0.01em;
+    }
+    .bottom-title span {
+      background: #000;
+      color: var(--yellow);
+      padding: 8px 22px;
+      margin-left: 14px;
+      border-radius: 4px;
+    }
+    .bottom-logo {
+      font-family: var(--font-mono);
+      font-size: 44px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      color: #1e293b;
+    }
+  </style>
+</head>
+<body>
+  <!-- 100% Real High-Resolution Photo Background -->
+  <div class="photo-background"></div>
+  <div class="photo-readable-overlay"></div>
+
+  <div class="poster-body">
+    <!-- Top Bar -->
+    <div class="top-kicker-row">
+      <div class="kicker-tape">
+        <!-- Google Material Icon: warning (Apache 2.0) -->
+        <svg class="material-svg" viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+        <span>软件工程新常态</span>
+      </div>
+      <div class="topic-tag">OPENCODE 2026 // CYBER REPORT</div>
+    </div>
+
+    <!-- Big Headline Group with Saturated Background Tapes -->
+    <div class="headline-group">
+      <div>
+        <div class="main-title-lead">OPENCODE 核心代码库</div>
+      </div>
+      <div>
+        <div class="color-block-yellow">遭 24H 连续 AI 攻防</div>
+      </div>
+      <div>
+        <div class="color-block-red">防守必须常驻 AGENT</div>
+      </div>
+    </div>
+
+    <!-- Narrative Strip -->
+    <div class="narrative-strip">
+      <p>
+        <!-- Google Material Icon: bolt (Apache 2.0) -->
+        <svg class="material-svg" style="fill: var(--yellow);" viewBox="0 0 24 24"><path d="M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51C12.96 17.55 11 21 11 21z"/></svg>
+        <span>每秒 4.8 万次</span> 高频渗透测试 · 人类值班修漏洞 <em>彻底失效</em>！
+      </p>
+    </div>
+
+    <!-- Big Numbers Multipliers -->
+    <div class="telemetry-row">
+      <div class="telemetry-box red-theme">
+        <div>
+          <div class="telemetry-label">平均修复响应时间 (MTTR)</div>
+          <div class="telemetry-num red">72h ➔ 3.2s</div>
+        </div>
+        <div class="telemetry-sub">漏洞暴露窗口极速缩短 80,000 倍</div>
+      </div>
+
+      <div class="telemetry-box blue-theme">
+        <div>
+          <div class="telemetry-label">智能体自动化拦截率</div>
+          <div class="telemetry-num blue">99.4%</div>
+        </div>
+        <div class="telemetry-sub">24/7 动态污点追踪 · 秒级自愈</div>
+      </div>
+    </div>
+
+    <!-- Bottom Solid Warning Banner -->
+    <div class="bottom-solid-bar">
+      <div class="bottom-title">以 AI 制 AI · <span>没有常驻 Agent 都是在裸奔</span></div>
+      <div class="bottom-logo">SECURITY REPORT</div>
+    </div>
+  </div>
+</body>
+</html>

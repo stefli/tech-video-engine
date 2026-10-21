@@ -1,0 +1,61 @@
+<template id="scene-07-template">
+  <div data-composition-id="scene-07" data-width="1080" data-height="1920">
+    <style>
+      @font-face {
+        font-family: "NotoSansSC";
+        src: url("../assets/NotoSansSC-VF.ttf") format("truetype");
+        font-weight: 100 900;
+        font-display: block;
+      }
+      [data-composition-id="scene-07"] {
+        position: relative; width: 1080px; height: 1920px; overflow: hidden;
+        background: #090B0C; color: #F3F0E8; font-family: "NotoSansSC", sans-serif;
+      }
+      .s7-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.65); }
+      .badge-lg { display: inline-flex; padding: 12px 22px; font-size: 28px; font-weight: 900; border-radius: 4px; border: 2px solid #FF6138; color: #FF6138; background: rgba(0,0,0,0.85); }
+      .card-item {
+        background: #131719;
+        border: 1.5px solid rgba(243,240,232,0.18);
+        border-radius: 8px;
+        padding: 24px 28px;
+        margin-bottom: 24px;
+        display: grid;
+        grid-template-columns: 70px 1fr;
+        align-items: center;
+        
+      }
+    </style>
+    <img class="s7-bg" src="assets/nozzle-macro.jpg" />
+    
+    <!-- 标题区 (top: 340px，高约 180px，底部至 520px) -->
+    <div style="position: absolute; left: 78px; right: 140px; top: 340px;">
+      <div style="font-size: 72px; font-weight: 900; line-height: 1.15; letter-spacing: -2.4px; margin-top: 0px;">
+        飞一次，<br />是最容易被看见的。<br /><span style="color: #FF7E5B; ">难的是每一次。</span>
+      </div>
+    </div>
+    
+    <!-- 卡片区 (推移至 top: 720px，与上方大标题拉开整整 200px 充足显著 Gap 净空) -->
+    <div style="position: absolute; left: 78px; right: 140px; top: 720px;">
+      <div class="card-item">
+        <div style="font-size: 38px; font-weight: 900; color: #FF7E5B; font-family: monospace;">01</div>
+        <div>
+          <div style="font-size: 44px; font-weight: 900;">每次喷射都可靠</div>
+          <div style="font-size: 28px; font-weight: 700; opacity: 0.85; margin-top: 6px;">气量、姿态、故障保护，不能只成功一次</div>
+        </div>
+      </div>
+      <div class="card-item" style="margin-bottom: 0;">
+        <div style="font-size: 38px; font-weight: 900; color: #FF7E5B; font-family: monospace;">02</div>
+        <div>
+          <div style="font-size: 44px; font-weight: 900;">每次着陆绝对安全</div>
+          <div style="font-size: 28px; font-weight: 700; opacity: 0.85; margin-top: 6px;">不是一次炫技，而是可验证的物理边界</div>
+        </div>
+      </div>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.from(".s7-bg", { scale: 1.05, duration: 7.6, ease: "none" }, 0);
+      window.__timelines["scene-07"] = tl;
+    </script>
+  </div>
+</template>

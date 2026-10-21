@@ -1,0 +1,75 @@
+<template id="scene-04-template">
+  <div data-composition-id="scene-04" data-width="1080" data-height="1920">
+    <style>
+      @font-face {
+        font-family: "NotoSansSC";
+        src: url("../assets/NotoSansSC-VF.ttf") format("truetype");
+        font-weight: 100 900;
+        font-display: block;
+      }
+      [data-composition-id="scene-04"] {
+        position: relative; width: 1080px; height: 1920px; overflow: hidden;
+        background: #090B0C; color: #F3F0E8; font-family: "NotoSansSC", sans-serif;
+      }
+      .s4-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 44%; opacity: 0.72; }
+      .badge-amber-lg { display: inline-flex; padding: 12px 22px; font-size: 28px; font-weight: 900; border-radius: 4px; border: 2px solid #E8B45A; color: #E8B45A; background: rgba(0,0,0,0.85); }
+      .card-item {
+        background: #131719;
+        border: 1.5px solid rgba(243,240,232,0.18);
+        border-radius: 8px;
+        padding: 22px 28px;
+        margin-bottom: 20px;
+        
+      }
+    </style>
+    <img class="s4-bg" src="assets/rear-detail.jpg" />
+    
+    <!-- 标题区 (top: 340px，高约 170px，底部至 510px) -->
+    <div style="position: absolute; left: 78px; right: 140px; top: 340px;">
+      <div style="font-size: 68px; font-weight: 900; line-height: 1.15; letter-spacing: -2px; margin-top: 0px;">
+        数字很猛，<br />但先看是谁说的。
+      </div>
+    </div>
+    
+    <!-- 版本列表区 (推移至 top: 620px，与上方大标题拉开 110px 充足安全间距) -->
+    <div style="position: absolute; left: 78px; right: 140px; top: 620px;">
+      <div class="card-item">
+        <div style="font-size: 28px; color: #E8B45A; font-weight: 900; letter-spacing: 1px;">ROCKET / 飞行版</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+          <span style="font-size: 38px; font-weight: 800;">单座 · 10 个冷气推进器</span>
+          <span style="font-size: 26px; color: #FFD175; font-weight: 900; background: rgba(0,0,0,0.7); padding: 4px 14px; border-radius: 4px; border: 1px solid #FFD175;">邀请制</span>
+        </div>
+      </div>
+      <div class="card-item" style="margin-bottom: 0;">
+        <div style="font-size: 28px; color: #F3F0E8; font-weight: 900; letter-spacing: 1px;">THRUST / 赛道版</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+          <span style="font-size: 38px; font-weight: 800;">双座 · 后置推进加速系统</span>
+          <span style="font-size: 26px; color: #FFD175; font-weight: 900; background: rgba(0,0,0,0.7); padding: 4px 14px; border-radius: 4px; border: 1px solid #FFD175;">目标 &lt; 1 s</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 关键数据卡片 (top: 980px，卡片间 gap: 28px) -->
+    <div style="position: absolute; left: 78px; right: 140px; top: 980px; display: grid; grid-template-columns: 1fr 1fr; gap: 28px;">
+      <div style="background: #131719; border: 1.5px solid rgba(243,240,232,0.18); border-radius: 8px; padding: 22px 26px; ">
+        <div style="font-size: 96px; font-weight: 900; color: #FF6138; line-height: 0.9; letter-spacing: -4px;">600</div>
+        <div style="font-size: 30px; margin-top: 12px; font-weight: 800;">
+          L 压缩空气<br /><span style="opacity: 0.85; font-size: 24px; color: #E8B45A;">Rocket 厂商公布</span>
+        </div>
+      </div>
+      <div style="background: #131719; border: 1.5px solid rgba(243,240,232,0.18); border-radius: 8px; padding: 22px 26px; ">
+        <div style="font-size: 82px; font-weight: 900; color: #E8B45A; line-height: 0.96; letter-spacing: -2px;">&lt; 1s</div>
+        <div style="font-size: 30px; margin-top: 12px; font-weight: 800;">
+          目标 0–60 mph<br /><span style="opacity: 0.85; font-size: 24px; color: #E8B45A;">厂商宣称非实测</span>
+        </div>
+      </div>
+    </div>
+    
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.from(".s4-bg", { scale: 1.05, duration: 7.4, ease: "none" }, 0);
+      window.__timelines["scene-04"] = tl;
+    </script>
+  </div>
+</template>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>科技快播 · 特斯拉飞行汽车</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "NotoSansSC";
+        src: url("assets/NotoSansSC-VF.ttf") format("truetype");
+        font-weight: 100 900;
+        font-display: block;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: #090B0C; color: #F3F0E8; font-family: "NotoSansSC", sans-serif;
+      }
+      #root {
+        position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #090B0C;
+      }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-yzze"
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="68"
+      data-width="1080"
+      data-height="1920"
+      data-fps="30"
+    >
+      <!-- 背景音乐与语音统一混音音轨 -->
+      <audio data-hf-id="hf-4t1d"
+        id="soundtrack"
+        data-start="0"
+        data-duration="68"
+        data-track-index="1"
+        src="assets/mix.mp3"
+        data-volume="1"
+      ></audio>
+
+      <!-- 10 个场景模块，使用 sub-composition 加载 -->
+      <div data-hf-id="hf-hl22" id="comp-s01" data-composition-id="scene-01" data-composition-src="compositions/scene-01.html" data-start="0" data-duration="4.5" data-track-index="2"></div>
+      <div data-hf-id="hf-rb4p" id="comp-s02" data-composition-id="scene-02" data-composition-src="compositions/scene-02.html" data-start="4.5" data-duration="8.6" data-track-index="2"></div>
+      <div data-hf-id="hf-07ot" id="comp-s03" data-composition-id="scene-03" data-composition-src="compositions/scene-03.html" data-start="13.1" data-duration="7.2" data-track-index="2"></div>
+      <div data-hf-id="hf-9vni" id="comp-s04" data-composition-id="scene-04" data-composition-src="compositions/scene-04.html" data-start="20.3" data-duration="7.4" data-track-index="2"></div>
+      <div data-hf-id="hf-zipl" id="comp-s05" data-composition-id="scene-05" data-composition-src="compositions/scene-05.html" data-start="27.7" data-duration="8.4" data-track-index="2"></div>
+      <div data-hf-id="hf-b92z" id="comp-s06" data-composition-id="scene-06" data-composition-src="compositions/scene-06.html" data-start="36.1" data-duration="9.0" data-track-index="2"></div>
+      <div data-hf-id="hf-o8g6" id="comp-s07" data-composition-id="scene-07" data-composition-src="compositions/scene-07.html" data-start="45.1" data-duration="7.6" data-track-index="2"></div>
+      <div data-hf-id="hf-yuf7" id="comp-s08" data-composition-id="scene-08" data-composition-src="compositions/scene-08.html" data-start="52.7" data-duration="5.6" data-track-index="2"></div>
+      <div data-hf-id="hf-uns7" id="comp-s09" data-composition-id="scene-09" data-composition-src="compositions/scene-09.html" data-start="58.3" data-duration="5.9" data-track-index="2"></div>
+      <div data-hf-id="hf-evss" id="comp-s10" data-composition-id="scene-10" data-composition-src="compositions/scene-10.html" data-start="64.2" data-duration="3.8" data-track-index="2"></div>
+
+      <!-- 全局信息层与字幕 -->
+      <div data-hf-id="hf-mn27" id="comp-chrome" data-composition-id="chrome-overlay" data-composition-src="compositions/chrome.html" data-start="0" data-duration="68" data-track-index="3"></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

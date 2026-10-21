@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# HyperFrames internal caches & artifacts
+.hyperframes/
+hyperframes-roadster/.hyperframes/
+renders/
+
+# Remotion caches
+.remotion/
+
+# Temporary work files & media caches
+work/*.mp4
+work/*.ts
+work/*.aac
+work/*.m3u8
+work/*.jpg
+work/*.png
+work/*.wav
+
+# Large rendered video artifacts (GitHub 100MB limit)
+# Note: Keep scripts and documentation to reproduce them
+outputs/*.mp4
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+*.log

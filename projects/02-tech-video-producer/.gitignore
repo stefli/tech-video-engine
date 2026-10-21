@@ -1,0 +1,10 @@
+# Ignore heavy rendered output videos (render on demand using OpenDesign / HyperFrames)
+projects/*/*.mp4
+!projects/*/assets/*.mp4
+
+# Temp frames and caches
+work/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db

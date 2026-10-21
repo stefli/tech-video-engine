@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>Anthropic 劳动力报告 · 大字报封面 (Non-overlapping)</title>
+  <style>
+    :root {
+      --bg: #03050a;
+      --surface: #090e1c;
+      --red: #f43f5e;
+      --red-bright: #ff1e46;
+      --blue: #38bdf8;
+      --paper: #f8fafc;
+      --muted: #94a3b8;
+      --font-huge: "Bahnschrift", "DIN Alternate", "Impact", sans-serif;
+      --font-cjk: "Microsoft YaHei", "PingFang SC", sans-serif;
+      --font-mono: "Cascadia Mono", "Consolas", monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 2160px;
+      height: 3840px;
+      background: var(--bg);
+      color: var(--paper);
+      font-family: var(--font-cjk);
+      position: relative;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .ambient-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 80% 25%, rgba(56, 189, 248, 0.16) 0%, transparent 55%),
+        radial-gradient(circle at 20% 75%, rgba(244, 63, 94, 0.14) 0%, transparent 55%),
+        var(--bg);
+    }
+    .grid-dots {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.5px, transparent 1.5px);
+      background-size: 54px 54px;
+      opacity: 0.6;
+    }
+
+    .poster-container {
+      position: absolute;
+      top: 540px;
+      left: 120px;
+      right: 120px;
+      z-index: 10;
+    }
+
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 54px;
+    }
+    .header-tag {
+      background: #fff;
+      color: #000;
+      font-family: var(--font-mono);
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      padding: 14px 32px;
+      text-transform: uppercase;
+    }
+    .header-meta {
+      font-family: var(--font-mono);
+      font-size: 30px;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .kicker-tag {
+      display: inline-block;
+      background: var(--blue);
+      color: #03050a;
+      font-family: var(--font-cjk);
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      padding: 14px 34px;
+      margin-bottom: 34px;
+    }
+    .title-row-1 {
+      font-family: var(--font-cjk);
+      font-size: 180px;
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin-bottom: 16px;
+    }
+    .title-row-1 span {
+      color: var(--red-bright);
+    }
+    .title-row-2 {
+      font-family: var(--font-cjk);
+      font-size: 165px;
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--blue);
+      margin-bottom: 48px;
+    }
+    .title-row-2 span {
+      color: #fff;
+    }
+
+    .razor-line {
+      width: 100%;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.2);
+      margin-bottom: 48px;
+    }
+
+    .statement-title {
+      font-size: 60px;
+      line-height: 1.38;
+      font-weight: 800;
+      color: #f1f5f9;
+      margin-bottom: 22px;
+    }
+    .statement-title span {
+      color: var(--blue);
+    }
+    .statement-sub {
+      font-size: 38px;
+      line-height: 1.5;
+      color: var(--muted);
+      margin-bottom: 56px;
+    }
+
+    .telemetry-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+      margin-bottom: 54px;
+    }
+    .telemetry-card {
+      background: var(--surface);
+      padding: 44px 48px;
+      border-radius: 4px;
+    }
+    .telemetry-card.danger-card {
+      background: #18090d;
+    }
+    .telemetry-label {
+      font-family: var(--font-mono);
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      color: var(--muted);
+    }
+    .telemetry-label.danger { color: var(--red); }
+    .telemetry-label.accent { color: var(--blue); }
+    .telemetry-val {
+      font-family: var(--font-huge);
+      font-size: 108px;
+      font-weight: 900;
+      line-height: 1.05;
+      margin-bottom: 14px;
+    }
+    .telemetry-val.danger { color: var(--red-bright); }
+    .telemetry-val.accent { color: var(--blue); }
+    .telemetry-desc {
+      font-size: 28px;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+
+    .footer-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0f172a;
+      padding: 34px 48px;
+      border-radius: 4px;
+    }
+    .footer-text {
+      font-size: 38px;
+      font-weight: 800;
+      color: #fff;
+    }
+    .footer-sub {
+      font-family: var(--font-mono);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--blue);
+      letter-spacing: 0.18em;
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-bg"></div>
+  <div class="grid-dots"></div>
+
+  <div class="poster-container">
+    <div class="header-bar">
+      <div class="header-tag">前沿技术劳动力报告 // REPORT</div>
+      <div class="header-meta">ANTHROPIC ECONOMIC DOSSIER</div>
+    </div>
+
+    <div class="kicker-tag">初级技术岗位遭遇历史性重塑</div>
+    <h1 class="title-row-1">初级岗 <span>暴跌 27%➔9%</span></h1>
+    <div class="title-row-2">AGENT <span>工时 6X 人类</span></div>
+
+    <div class="razor-line"></div>
+
+    <div class="statement-title">
+      技术团队从金字塔走向倒三角：<span>1 位架构师 + Agent 集群</span> 成新标配。
+    </div>
+    <div class="statement-sub">
+      初级程序员写模板代码起步的传统通道，正在被自动化智能体彻底替代。
+    </div>
+
+    <div class="telemetry-row">
+      <div class="telemetry-card danger-card">
+        <div class="telemetry-label danger">初级技术岗招聘占比</div>
+        <div class="telemetry-val danger">27% ➔ 9%</div>
+        <div class="telemetry-desc">-67.5% 历史罕见断崖式下跌</div>
+      </div>
+      <div class="telemetry-card">
+        <div class="telemetry-label accent">智能体有效工时倍率</div>
+        <div class="telemetry-val accent">6.2X LEVER</div>
+        <div class="telemetry-desc">每周 248 小时全自主推演交付</div>
+      </div>
+    </div>
+
+    <div class="footer-bar">
+      <div class="footer-text">技术能力门槛正在从初级编码跃升至架构指挥</div>
+      <div class="footer-sub">LABOR RESHAPED</div>
+    </div>
+  </div>
+</body>
+</html>

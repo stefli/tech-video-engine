@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <meta name="od-motion-output" content="video">
+  <meta name="od-motion-audio" content="required">
+  <link rel="alternate" type="video/mp4" href="./gemini_argon.mp4">
+  <title>Gemini 4 Argon · 科技深度解析</title>
+  <script src="./assets/gsap.min.js"></script>
+  <style>
+    :root {
+      --ink: #04070c;
+      --ink-card: #080d16;
+      --paper: #f6f8fa;
+      --ash: #cbd5e1;
+      --gray: #64748b;
+      --blue: #38bdf8;
+      --blue-glow: rgba(56, 189, 248, 0.45);
+      --border: rgba(148, 163, 184, 0.22);
+      --display: "Bahnschrift", "DIN Alternate", sans-serif;
+      --cjk: "Microsoft YaHei", "PingFang SC", sans-serif;
+      --mono: "Cascadia Mono", "Consolas", monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background: var(--ink);
+    }
+    body {
+      color: var(--paper);
+      font-family: var(--cjk);
+      -webkit-font-smoothing: antialiased;
+    }
+    #main {
+      position: relative;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background: var(--ink);
+    }
+
+    /* Global Tech Atmosphere */
+    .tech-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 75% 25%, rgba(56, 189, 248, 0.08) 0%, transparent 55%),
+        radial-gradient(circle at 20% 80%, rgba(15, 23, 42, 0.8) 0%, transparent 60%),
+        var(--ink);
+      pointer-events: none;
+    }
+    .grid-mesh {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(148, 163, 184, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148, 163, 184, 0.035) 1px, transparent 1px);
+      background-size: 80px 80px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .scene {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 5;
+    }
+
+    /* Ultra-HD Inspector Viewport for 100% Crisp Video Playback */
+    .viewport-box {
+      position: absolute;
+      right: 80px;
+      top: 154px;
+      width: 1020px;
+      height: 640px;
+      background: #020408;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85), 0 0 45px rgba(56, 189, 248, 0.12);
+      overflow: hidden;
+      z-index: 10;
+    }
+    .viewport-box::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 40px;
+      background: rgba(15, 23, 42, 0.95);
+      border-bottom: 1px solid var(--border);
+      z-index: 12;
+    }
+    .viewport-header {
+      position: absolute;
+      top: 11px;
+      left: 18px;
+      right: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: var(--ash);
+      z-index: 15;
+    }
+    .viewport-header .dots {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .viewport-header .dots i {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(148, 163, 184, 0.3);
+      display: block;
+    }
+    .viewport-header .dots i.active {
+      background: var(--blue);
+      box-shadow: 0 0 10px var(--blue);
+    }
+    .viewport-video {
+      position: absolute;
+      top: 40px;
+      left: 0;
+      width: 100%;
+      height: calc(100% - 40px);
+      object-fit: cover;
+      background: #000;
+    }
+    .viewport-hud {
+      position: absolute;
+      bottom: 14px;
+      left: 18px;
+      right: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: rgba(246, 248, 250, 0.85);
+      z-index: 15;
+      pointer-events: none;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+    }
+    .viewport-badge {
+      padding: 4px 10px;
+      background: rgba(4, 7, 12, 0.9);
+      border: 1px solid rgba(56, 189, 248, 0.6);
+      color: var(--blue);
+      border-radius: 3px;
+      font-weight: 600;
+    }
+
+    /* Editorial Column */
+    .editorial-col {
+      position: absolute;
+      left: 80px;
+      top: 154px;
+      width: 680px;
+      z-index: 20;
+    }
+    .chapter-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 14px;
+      background: rgba(56, 189, 248, 0.12);
+      border-left: 3px solid var(--blue);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      color: var(--blue);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .headline {
+      font-family: var(--display);
+      font-size: 76px;
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      color: #fff;
+      margin-bottom: 24px;
+    }
+    .headline span { color: var(--blue); }
+    .narrative {
+      font-size: 23px;
+      line-height: 1.6;
+      font-weight: 350;
+      color: var(--ash);
+      margin-bottom: 28px;
+    }
+    .spec-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 20px;
+    }
+    .spec-item {
+      background: rgba(8, 13, 22, 0.9);
+      border: 1px solid var(--border);
+      padding: 14px 18px;
+      border-radius: 4px;
+    }
+    .spec-item .label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--gray);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .spec-item .val {
+      font-family: var(--display);
+      font-size: 25px;
+      font-weight: 700;
+      color: var(--paper);
+    }
+
+    /* Intro Special Layout */
+    .intro-hero {
+      position: absolute;
+      left: 90px;
+      top: 170px;
+      width: 720px;
+      z-index: 20;
+    }
+    .intro-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 7px 15px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.2em;
+      color: var(--blue);
+      margin-bottom: 22px;
+    }
+    .intro-title {
+      font-family: var(--display);
+      font-size: 104px;
+      line-height: 0.92;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+    }
+    .intro-title em { color: var(--blue); font-style: normal; }
+    .intro-sub {
+      font-size: 26px;
+      font-weight: 350;
+      color: var(--ash);
+      margin-top: 24px;
+      line-height: 1.5;
+    }
+
+    /* Outro Special Layout */
+    .outro-card {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 1200px;
+      text-align: center;
+      z-index: 25;
+    }
+    .outro-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(56, 189, 248, 0.14);
+      border: 1px solid var(--blue);
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.22em;
+      color: var(--blue);
+      margin-bottom: 24px;
+    }
+    .outro-card .huge {
+      font-family: var(--display);
+      font-size: 108px;
+      line-height: 0.95;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+    .outro-card .huge span { color: var(--blue); }
+    .outro-card .body {
+      font-size: 26px;
+      color: var(--ash);
+      margin: 24px auto;
+      max-width: 860px;
+      line-height: 1.55;
+    }
+    .outro-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 24px;
+      padding: 14px 28px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.16em;
+      color: var(--paper);
+      margin-top: 14px;
+    }
+    .outro-action i {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--blue);
+      box-shadow: 0 0 10px var(--blue);
+      display: inline-block;
+    }
+
+    /* Chrome Headers & Footers */
+    .chrome-top {
+      position: absolute;
+      top: 42px;
+      left: 80px;
+      right: 80px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 30;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(246, 248, 250, 0.7);
+    }
+    .chrome-top-left { display: flex; align-items: center; gap: 12px; }
+    .chrome-mark {
+      width: 8px; height: 8px;
+      border: 1px solid var(--paper);
+      transform: rotate(45deg);
+    }
+    .chrome-sep { width: 36px; height: 1px; background: rgba(246, 248, 250, 0.3); }
+    .chrome-top-right { color: var(--blue); font-weight: 600; }
+
+    .chrome-bot {
+      position: absolute;
+      left: 80px;
+      right: 80px;
+      bottom: 34px;
+      z-index: 30;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      color: rgba(246, 248, 250, 0.5);
+      text-transform: uppercase;
+    }
+    .counter strong { color: var(--paper); font-weight: 600; }
+    .progress-bar {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 3px;
+      z-index: 35;
+      background: rgba(246, 248, 250, 0.1);
+    }
+    .progress-bar i {
+      display: block;
+      width: 0%;
+      height: 100%;
+      background: var(--blue);
+    }
+
+    .flash-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 40;
+      pointer-events: none;
+      background: #cce5ff;
+      opacity: 0;
+    }
+
+    /* Chapter 2 Domains Layout */
+    .domain-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+    .domain-pill {
+      padding: 10px 16px;
+      border: 1px solid var(--border);
+      background: rgba(8, 13, 22, 0.8);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      color: var(--ash);
+    }
+  </style>
+</head>
+<body>
+  <div id="main" data-composition-id="main" data-start="0" data-duration="48"
+       data-width="1920" data-height="1080" data-fps="30" data-poster-time="2.0">
+
+    <div class="tech-bg"></div>
+    <div class="grid-mesh"></div>
+
+    <!-- Top Chrome -->
+    <div class="chrome-top">
+      <div class="chrome-top-left">
+        <span class="chrome-mark"></span>
+        <span>TECH DOSSIER // DEEP DIVE</span>
+        <span class="chrome-sep"></span>
+        <span>GOOGLE DEEPMIND</span>
+      </div>
+      <div class="chrome-top-right">EPISODE 04 · GEMINI 4 ARGON</div>
+    </div>
+
+    <!-- Bottom Chrome -->
+    <div class="chrome-bot">
+      <div>SOURCES: GOOGLE DEEPMIND VERIFIED RELEASES & CLOUD DOCS</div>
+      <div class="counter"><strong id="timecode">00:00</strong> / 00:48</div>
+    </div>
+    <div class="progress-bar"><i id="progress-line"></i></div>
+    <div class="flash-overlay" id="flash"></div>
+
+    <!-- SCENE 1: INTRO / THE HOOK (0.0 - 6.8s) -->
+    <section id="s1" class="scene s1">
+      <div class="intro-hero">
+        <div class="intro-badge">BREAKTHROUGH REPORT · OCTOBER 2026</div>
+        <h1 class="intro-title">GEMINI 4<br><em>ARGON.</em></h1>
+        <p class="intro-sub">AI的下一个分水岭，不是陪你闲聊，<br>而是替你交付真实可运行的世界。</p>
+      </div>
+      <div class="viewport-box">
+        <div class="viewport-header">
+          <div class="dots"><i class="active"></i><i></i><i></i></div>
+          <div>MODEL ARCHITECTURE // GEMINI 4 ARGON</div>
+        </div>
+        <video id="hero-vid" class="viewport-video" src="./assets/case_hero.mp4" muted playsinline
+               data-start="0" data-duration="6.8" data-media-start="0" data-track-index="0"></video>
+        <div class="viewport-hud">
+          <div class="viewport-badge">OFFICIAL HERO CAPTURE</div>
+          <div>STREAM // 60 FPS ULTRA-HD</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 2: CHAPTER 01 · BEYOND CHAT (6.8 - 13.6s) -->
+    <section id="s2" class="scene s2">
+      <div class="editorial-col">
+        <div class="chapter-tag">CHAPTER 01 // PARADIGM SHIFT</div>
+        <h2 class="headline">NOT A<br><span>CHATBOT.</span></h2>
+        <p class="narrative">不再只是文字界面的回答升级，<br>专门为长周期、复杂深工作任务打造的核心模型。</p>
+        <div class="domain-list">
+          <div class="domain-pill">CODING REFACTOR</div>
+          <div class="domain-pill">FINANCIAL SYSTEMS</div>
+          <div class="domain-pill">LEGAL WORKFLOWS</div>
+          <div class="domain-pill">CYBERSECURITY</div>
+          <div class="domain-pill">SCIENCE SIMULATION</div>
+        </div>
+      </div>
+      <div class="viewport-box">
+        <div class="viewport-header">
+          <div class="dots"><i class="active"></i><i></i><i></i></div>
+          <div>INSPECTOR // SYSTEM SCHEMATICS</div>
+        </div>
+        <img class="viewport-video" src="./assets/argon_header_hd.png" alt="Argon Architecture Schematics" style="object-fit:cover;">
+        <div class="viewport-hud">
+          <div class="viewport-badge">ENGINEERING MODEL FILE</div>
+          <div>STATUS // GENERAL AVAILABILITY</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 3: CHAPTER 02 · PLAYABLE GAME (13.6 - 20.6s) -->
+    <section id="s3" class="scene s3">
+      <div class="editorial-col">
+        <div class="chapter-tag">CHAPTER 02 // ARTIFACT VERIFICATION</div>
+        <h2 class="headline">DESK<br><span>RACER.</span></h2>
+        <p class="narrative">一张桌面的日常照片，直接长出可玩的赛车游戏。<br>赛道几何、刚体物理、灯光贴图与驾驶交互，一次生成。</p>
+        <div class="spec-grid">
+          <div class="spec-item">
+            <span class="label">INPUT PROMPT</span>
+            <span class="val">SINGLE PHOTO</span>
+          </div>
+          <div class="spec-item">
+            <span class="label">OUTPUT STATUS</span>
+            <span class="val">PLAYABLE 3D</span>
+          </div>
+        </div>
+      </div>
+      <div class="viewport-box">
+        <div class="viewport-header">
+          <div class="dots"><i class="active"></i><i></i><i></i></div>
+          <div>PLAYABLE DEMO // DESK RACER PHYSICS</div>
+        </div>
+        <video id="game-vid" class="viewport-video" src="./assets/case_game.mp4" muted playsinline
+               data-start="13.6" data-duration="7.0" data-media-start="0" data-track-index="0"></video>
+        <div class="viewport-hud">
+          <div class="viewport-badge">FULL INTERACTION DEMO</div>
+          <div>RIGID BODY SIMULATION // ACTIVE</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 4: CHAPTER 03 · 3D ARCHITECTURE (20.6 - 27.6s) -->
+    <section id="s4" class="scene s4">
+      <div class="editorial-col">
+        <div class="chapter-tag">CHAPTER 03 // 3D WORLDS</div>
+        <h2 class="headline">BUILD THE<br><span>WORLD.</span></h2>
+        <p class="narrative">从木构五重宝塔，到庞大复杂的哥特教堂。<br>几何结构、光影折射与复杂纹理，在同一提示词流中迭代。</p>
+        <div class="spec-grid">
+          <div class="spec-item">
+            <span class="label">PRIMARY STRUCTURE</span>
+            <span class="val">PAGODA 3D</span>
+          </div>
+          <div class="spec-item">
+            <span class="label">SECONDARY COMPLEXITY</span>
+            <span class="val">CATHEDRAL</span>
+          </div>
+        </div>
+      </div>
+      <div class="viewport-box">
+        <div class="viewport-header">
+          <div class="dots"><i class="active"></i><i></i><i></i></div>
+          <div>ENVIRONMENT SYNTHESIS // ARCHITECTURE</div>
+        </div>
+        <video id="pagoda-vid" class="viewport-video" src="./assets/case_pagoda.mp4" muted playsinline
+               data-start="20.6" data-duration="3.5" data-media-start="0" data-track-index="1"></video>
+        <video id="cathedral-vid" class="viewport-video" src="./assets/case_cathedral.mp4" muted playsinline
+               data-start="24.1" data-duration="3.5" data-media-start="0" data-track-index="1"
+               style="visibility:hidden; opacity:0;"></video>
+        <div class="viewport-hud">
+          <div class="viewport-badge">GEOMETRY & VOLUMETRIC LIGHT</div>
+          <div>RAY MARCHING // PROCEDURAL</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 5: CHAPTER 04 · PROCEDURAL MOTION (27.6 - 34.0s) -->
+    <section id="s5" class="scene s5">
+      <div class="editorial-col">
+        <div class="chapter-tag">CHAPTER 04 // NO GAME ENGINE</div>
+        <h2 class="headline">CODE BECOMES<br><span>MOTION.</span></h2>
+        <p class="narrative">脱离任何现成引擎，仅凭纯 Python 与数学逻辑。<br>自主编译材质光影，渲染出一帧帧连续的三维动画。</p>
+        <div class="spec-grid">
+          <div class="spec-item">
+            <span class="label">DEPENDENCIES</span>
+            <span class="val">VANILLA PYTHON</span>
+          </div>
+          <div class="spec-item">
+            <span class="label">GENERATED LINES</span>
+            <span class="val">5,500+ LOC</span>
+          </div>
+        </div>
+      </div>
+      <div class="viewport-box">
+        <div class="viewport-header">
+          <div class="dots"><i class="active"></i><i></i><i></i></div>
+          <div>PROCEDURAL COMPILATION // PYTHON + NUMPY</div>
+        </div>
+        <video id="anim-vid" class="viewport-video" src="./assets/case_animation.mp4" muted playsinline
+               data-start="27.6" data-duration="6.4" data-media-start="0" data-track-index="9"></video>
+        <div class="viewport-hud">
+          <div class="viewport-badge">PURE SCRIPT ANIMATION</div>
+          <div>ZERO EXTERNAL ENGINE DEPENDENCY</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 6: CHAPTER 05 · WORKBENCH BENCHMARK (34.0 - 40.8s) -->
+    <section id="s6" class="scene s6">
+      <div class="editorial-col">
+        <div class="chapter-tag">CHAPTER 05 // HARDWARE & BENCHMARKS</div>
+        <h2 class="headline">LONG CONTEXT.<br><span>DEEP SWE.</span></h2>
+        <p class="narrative">真实工业界任务需要极长推演链。<br>Argon 将全部代码、上下文与中间状态留在同一张工作台。</p>
+        <div class="spec-grid">
+          <div class="spec-item">
+            <span class="label">CONTEXT & OUTPUT</span>
+            <span class="val">1,048,576 TOKENS</span>
+          </div>
+          <div class="spec-item">
+            <span class="label">VALS INDEX (GOOGLE)</span>
+            <span class="val">68.9% SCORE</span>
+          </div>
+        </div>
+      </div>
+      <div class="viewport-box">
+        <div class="viewport-header">
+          <div class="dots"><i class="active"></i><i></i><i></i></div>
+          <div>OFFICIAL EVALS // VALS INDEX BENCHMARK</div>
+        </div>
+        <div style="position:absolute; top:40px; left:0; width:100%; height:calc(100% - 40px); background:#fff; display:flex; align-items:center; justify-content:center; padding:20px;">
+          <img src="./assets/chart_vals_hd.png" alt="Vals Index Chart" style="max-width:100%; max-height:100%; object-fit:contain;">
+        </div>
+        <div class="viewport-hud" style="color:#04070c;">
+          <div class="viewport-badge" style="background:#fff; color:#04070c; border-color:#04070c;">OFFICIAL GOOGLE EVALUATION</div>
+          <div style="color:#1e293b; font-weight:600;">HIGHER IS BETTER // VERIFIED</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 7: OUTRO / CLOSING DOSSIER (40.8 - 48.0s) -->
+    <section id="s7" class="scene s7">
+      <div class="outro-card">
+        <div class="outro-badge">DOSSIER CONCLUSION // 2026</div>
+        <h2 class="huge">DEEP WORK.<br><span>REAL DELIVERY.</span></h2>
+        <p class="body">从生成内容，到生成世界。把长周期复杂任务交给模型。<br>Gemini 4 Argon 现已面向开发者、企业与消费者全面开放。</p>
+        <div class="outro-action">
+          <i></i>
+          <span>SUBSCRIBE FOR NEXT TECH DOSSIER // 关注前沿深度解析</span>
+          <span style="color:var(--blue); font-weight:700;">OCT 2026</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- AUDIO TRACKS -->
+    <audio id="music" src="./assets/music.wav" data-start="0" data-duration="48" data-track-index="2" data-volume="0.22" preload="auto"></audio>
+    <audio id="voice1" src="./assets/voice_01.wav" data-start="0.4" data-duration="6.15" data-track-index="3" data-volume="1.0" preload="auto"></audio>
+    <audio id="voice2" src="./assets/voice_02.wav" data-start="7.0" data-duration="6.46" data-track-index="4" data-volume="1.0" preload="auto"></audio>
+    <audio id="voice3" src="./assets/voice_03.wav" data-start="13.8" data-duration="6.98" data-track-index="5" data-volume="1.0" preload="auto"></audio>
+    <audio id="voice4" src="./assets/voice_04.wav" data-start="20.8" data-duration="6.96" data-track-index="6" data-volume="1.0" preload="auto"></audio>
+    <audio id="voice5" src="./assets/voice_05.wav" data-start="27.8" data-duration="6.24" data-track-index="7" data-volume="1.0" preload="auto"></audio>
+    <audio id="voice6" src="./assets/voice_06.wav" data-start="34.2" data-duration="6.34" data-track-index="8" data-volume="1.0" preload="auto"></audio>
+    <audio id="voice7" src="./assets/voice_07.wav" data-start="41.0" data-duration="6.20" data-track-index="10" data-volume="1.0" preload="auto"></audio>
+
+  </div>
+
+  <script>
+    const DURATION = 48.0;
+    const scenes = ["s1", "s2", "s3", "s4", "s5", "s6", "s7"];
+    
+    scenes.forEach((id, idx) => {
+      const el = document.getElementById(id);
+      el.style.opacity = idx === 0 ? "1" : "0";
+      el.style.visibility = idx === 0 ? "visible" : "hidden";
+    });
+
+    const tl = gsap.timeline({ paused: true });
+    const clock = { t: 0 };
+    tl.to(clock, { t: DURATION, duration: DURATION, ease: "none" }, 0);
+
+    // Scene Cuts Timeline
+    const cutMoments = [
+      { at: 6.8, from: "s1", to: "s2" },
+      { at: 13.6, from: "s2", to: "s3" },
+      { at: 20.6, from: "s3", to: "s4" },
+      { at: 27.6, from: "s4", to: "s5" },
+      { at: 34.0, from: "s5", to: "s6" },
+      { at: 40.8, from: "s6", to: "s7" }
+    ];
+
+    cutMoments.forEach((cut) => {
+      tl.set("#" + cut.from, { visibility: "hidden" }, cut.at);
+      tl.set("#" + cut.to, { visibility: "visible" }, cut.at);
+      tl.to("#" + cut.to, { opacity: 1, duration: 0.05, ease: "none" }, cut.at);
+      tl.fromTo(
+        "#flash",
+        { opacity: 0.55 },
+        { opacity: 0, duration: 0.16, ease: "power2.out", immediateRender: false },
+        cut.at
+      );
+    });
+
+    // SCENE 1 ANIMATIONS (0 - 6.8s)
+    tl.from("#s1 .intro-badge", { opacity: 0, x: -30, duration: 0.6, ease: "power3.out" }, 0.2);
+    tl.from("#s1 .intro-title", { opacity: 0, y: 70, duration: 0.8, ease: "expo.out" }, 0.35);
+    tl.from("#s1 .intro-sub", { opacity: 0, y: 25, duration: 0.6, ease: "power2.out" }, 0.65);
+    tl.from("#s1 .viewport-box", { opacity: 0, scale: 0.94, duration: 0.9, ease: "power3.out" }, 0.3);
+
+    // SCENE 2 ANIMATIONS (6.8 - 13.6s)
+    tl.from("#s2 .chapter-tag", { opacity: 0, x: -20, duration: 0.5, ease: "power3.out" }, 6.85);
+    tl.from("#s2 .headline", { opacity: 0, y: 40, duration: 0.6, ease: "expo.out" }, 6.95);
+    tl.from("#s2 .narrative", { opacity: 0, y: 20, duration: 0.5, ease: "power2.out" }, 7.2);
+    tl.from("#s2 .domain-pill", { opacity: 0, y: 15, duration: 0.35, stagger: 0.08, ease: "power2.out" }, 7.4);
+    tl.from("#s2 .viewport-box", { opacity: 0, scale: 0.95, duration: 0.7, ease: "power2.out" }, 6.9);
+
+    // SCENE 3 ANIMATIONS (13.6 - 20.6s)
+    tl.from("#s3 .chapter-tag", { opacity: 0, x: -20, duration: 0.5, ease: "power3.out" }, 13.65);
+    tl.from("#s3 .headline", { opacity: 0, y: 40, duration: 0.6, ease: "expo.out" }, 13.75);
+    tl.from("#s3 .narrative", { opacity: 0, y: 20, duration: 0.5, ease: "power2.out" }, 14.0);
+    tl.from("#s3 .spec-item", { opacity: 0, y: 15, duration: 0.4, stagger: 0.1, ease: "power2.out" }, 14.2);
+    tl.from("#s3 .viewport-box", { opacity: 0, scale: 0.95, duration: 0.7, ease: "power2.out" }, 13.7);
+
+    // SCENE 4 ANIMATIONS (20.6 - 27.6s)
+    tl.from("#s4 .chapter-tag", { opacity: 0, x: -20, duration: 0.5, ease: "power3.out" }, 20.65);
+    tl.from("#s4 .headline", { opacity: 0, y: 40, duration: 0.6, ease: "expo.out" }, 20.75);
+    tl.from("#s4 .narrative", { opacity: 0, y: 20, duration: 0.5, ease: "power2.out" }, 21.0);
+    tl.from("#s4 .spec-item", { opacity: 0, y: 15, duration: 0.4, stagger: 0.1, ease: "power2.out" }, 21.2);
+    tl.from("#s4 .viewport-box", { opacity: 0, scale: 0.95, duration: 0.7, ease: "power2.out" }, 20.7);
+    // Architecture Swap (Pagoda to Cathedral at 24.1s)
+    tl.set("#pagoda-vid", { visibility: "hidden", opacity: 0 }, 24.1);
+    tl.set("#cathedral-vid", { visibility: "visible", opacity: 1 }, 24.1);
+    tl.fromTo("#flash", { opacity: 0.35 }, { opacity: 0, duration: 0.15, ease: "power2.out", immediateRender: false }, 24.1);
+
+    // SCENE 5 ANIMATIONS (27.6 - 34.0s)
+    tl.from("#s5 .chapter-tag", { opacity: 0, x: -20, duration: 0.5, ease: "power3.out" }, 27.65);
+    tl.from("#s5 .headline", { opacity: 0, y: 40, duration: 0.6, ease: "expo.out" }, 27.75);
+    tl.from("#s5 .narrative", { opacity: 0, y: 20, duration: 0.5, ease: "power2.out" }, 28.0);
+    tl.from("#s5 .spec-item", { opacity: 0, y: 15, duration: 0.4, stagger: 0.1, ease: "power2.out" }, 28.2);
+    tl.from("#s5 .viewport-box", { opacity: 0, scale: 0.95, duration: 0.7, ease: "power2.out" }, 27.7);
+
+    // SCENE 6 ANIMATIONS (34.0 - 40.8s)
+    tl.from("#s6 .chapter-tag", { opacity: 0, x: -20, duration: 0.5, ease: "power3.out" }, 34.05);
+    tl.from("#s6 .headline", { opacity: 0, y: 40, duration: 0.6, ease: "expo.out" }, 34.15);
+    tl.from("#s6 .narrative", { opacity: 0, y: 20, duration: 0.5, ease: "power2.out" }, 34.35);
+    tl.from("#s6 .spec-item", { opacity: 0, y: 15, duration: 0.4, stagger: 0.1, ease: "power2.out" }, 34.5);
+    tl.from("#s6 .viewport-box", { opacity: 0, scale: 0.95, duration: 0.7, ease: "power2.out" }, 34.1);
+
+    // SCENE 7 ANIMATIONS (40.8 - 48.0s)
+    tl.from("#s7 .outro-badge", { opacity: 0, y: -20, duration: 0.5, ease: "power3.out" }, 40.9);
+    tl.from("#s7 .huge", { opacity: 0, y: 50, duration: 0.7, ease: "expo.out" }, 41.05);
+    tl.from("#s7 .body", { opacity: 0, y: 20, duration: 0.6, ease: "power2.out" }, 41.35);
+    tl.from("#s7 .outro-action", { opacity: 0, scale: 0.95, duration: 0.5, ease: "back.out(1.5)" }, 41.7);
+    tl.to("#s7 .outro-card", { opacity: 0, duration: 0.6, ease: "power2.in" }, 47.2);
+
+    // Continuous Progress Bar & Clock
+    tl.fromTo("#progress-line", { width: "0%" }, { width: "100%", duration: DURATION, ease: "none" }, 0);
+
+    const timecode = document.getElementById("timecode");
+    const clockProxy = { s: 0 };
+    tl.to(clockProxy, {
+      s: DURATION - 0.001,
+      duration: DURATION,
+      ease: "none",
+      onUpdate: () => {
+        const whole = Math.floor(clockProxy.s);
+        timecode.textContent = "00:" + String(whole).padStart(2, "0");
+      }
+    }, 0);
+
+    window.__timelines = window.__timelines || {};
+    window.__timelines["main"] = tl;
+  </script>
+</body>
+</html>

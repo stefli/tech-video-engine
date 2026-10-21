@@ -1,0 +1,37 @@
+<template id="scene-01-template">
+  <div data-composition-id="scene-01" data-width="1080" data-height="1920">
+    <style>
+      @font-face {
+        font-family: "NotoSansSC";
+        src: url("../assets/NotoSansSC-VF.ttf") format("truetype");
+        font-weight: 100 900;
+        font-display: block;
+      }
+      [data-composition-id="scene-01"] {
+        position: relative; width: 1080px; height: 1920px; overflow: hidden;
+        background: #090B0C; color: #F3F0E8; font-family: "NotoSansSC", sans-serif;
+      }
+      .s1-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+      .s1-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(9,11,12,0.85) 0%, rgba(9,11,12,0.15) 30%, rgba(9,11,12,0.65) 65%, rgba(9,11,12,0.98) 100%); }
+      .s1-content { position: absolute; left: 78px; right: 140px; top: 380px; }
+      .s1-title { font-size: 88px; font-weight: 900; line-height: 1.15; letter-spacing: -3.4px;  }
+    </style>
+    <!-- 扣题视频：特斯拉新 Roadster 在跑道上冷气推进启动、离地升空飞起的震撼画面 -->
+    <video id="s1-video-bg" class="s1-video clip" data-start="0" data-duration="4.5" data-track-index="0" src="assets/liftoff-video.mp4" muted playsinline></video>
+    <div class="s1-overlay"></div>
+    <div class="s1-content">
+      <div class="s1-title">
+        特斯拉，<br />
+        <span style="color: #FF6138;">真的飞起来了！</span><br />
+        最难的一步，<br />
+        绝不是起飞。
+      </div>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.from(".s1-content", { y: 30, opacity: 0, duration: 0.8, ease: "power2.out" }, 0.2);
+      window.__timelines["scene-01"] = tl;
+    </script>
+  </div>
+</template>

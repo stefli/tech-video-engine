@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1080, height=1920">
+  <meta name="od-motion-output" content="video">
+  <meta name="od-motion-audio" content="required">
+  <link rel="alternate" type="video/mp4" href="./anthropic_employment_report_4k.mp4">
+  <title>Anthropic 劳动力报告续篇 · 4K 深度解析</title>
+  <script src="./assets/gsap.min.js"></script>
+  <style>
+    :root {
+      --ink: #04070c;
+      --ink-card: #080d16;
+      --paper: #f6f8fa;
+      --ash: #cbd5e1;
+      --gray: #64748b;
+      --blue: #38bdf8;
+      --red: #f43f5e;
+      --green: #10b981;
+      --border: rgba(148, 163, 184, 0.22);
+      --display: "Bahnschrift", "DIN Alternate", sans-serif;
+      --cjk: "Microsoft YaHei", "PingFang SC", sans-serif;
+      --mono: "Cascadia Mono", "Consolas", monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      background: var(--ink);
+    }
+    body {
+      color: var(--paper);
+      font-family: var(--cjk);
+      -webkit-font-smoothing: antialiased;
+    }
+    #main {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      background: var(--ink);
+    }
+
+    /* Global Tech Atmosphere */
+    .tech-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(56, 189, 248, 0.12) 0%, transparent 60%),
+        radial-gradient(circle at 50% 85%, rgba(15, 23, 42, 0.9) 0%, transparent 65%),
+        var(--ink);
+      pointer-events: none;
+    }
+    .grid-mesh {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(148, 163, 184, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148, 163, 184, 0.035) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .scene {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 5;
+    }
+
+    .flash-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 40;
+      pointer-events: none;
+      background: #cce5ff;
+      opacity: 0;
+    }
+
+    /* Centralized Visual Hierarchy (Top Safe Zone: 0-220px; Bottom Safe Zone: 1360-1920px) */
+    .upper-section {
+      position: absolute;
+      top: 220px;
+      left: 64px;
+      right: 64px;
+      z-index: 20;
+    }
+    .headline {
+      font-family: var(--display);
+      font-size: 104px;
+      font-weight: 700;
+      line-height: 0.94;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      color: #fff;
+    }
+    .headline span { color: var(--blue); }
+    .headline span.danger { color: var(--red); }
+
+    /* Central 16:9 Inspector Viewport */
+    .central-viewport {
+      position: absolute;
+      top: 450px;
+      left: 64px;
+      right: 64px;
+      height: 556px;
+      background: #020408;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85), 0 0 40px rgba(56, 189, 248, 0.12);
+      overflow: hidden;
+      z-index: 10;
+    }
+    .central-viewport::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 48px;
+      background: rgba(15, 23, 42, 0.95);
+      border-bottom: 1px solid var(--border);
+      z-index: 12;
+    }
+    .viewport-header {
+      position: absolute;
+      top: 12px;
+      left: 20px;
+      right: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 22px;
+      letter-spacing: 0.14em;
+      color: var(--ash);
+      z-index: 15;
+    }
+    .viewport-header .dots {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .viewport-header .dots i {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: rgba(148, 163, 184, 0.3);
+      display: block;
+    }
+    .viewport-header .dots i.active {
+      background: var(--blue);
+      box-shadow: 0 0 10px var(--blue);
+    }
+    .viewport-content {
+      position: absolute;
+      top: 48px;
+      left: 0;
+      width: 100%;
+      height: calc(100% - 48px);
+      object-fit: cover;
+      background: #000;
+    }
+    .viewport-hud {
+      position: absolute;
+      bottom: 14px;
+      left: 20px;
+      right: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 22px;
+      color: rgba(246, 248, 250, 0.85);
+      z-index: 15;
+      pointer-events: none;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+    }
+    .viewport-badge {
+      padding: 6px 14px;
+      background: rgba(4, 7, 12, 0.9);
+      border: 1px solid rgba(56, 189, 248, 0.6);
+      color: var(--blue);
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 20px;
+    }
+
+    /* Lower Info Section */
+    .lower-section {
+      position: absolute;
+      top: 1036px;
+      left: 64px;
+      right: 64px;
+      z-index: 20;
+    }
+    .narrative {
+      font-size: 42px;
+      line-height: 1.45;
+      font-weight: 350;
+      color: var(--ash);
+      margin-bottom: 24px;
+    }
+    .spec-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .spec-item {
+      background: rgba(8, 13, 22, 0.9);
+      border: 1px solid var(--border);
+      padding: 18px 24px;
+      border-radius: 6px;
+    }
+    .spec-item .label {
+      font-family: var(--mono);
+      font-size: 26px;
+      color: var(--gray);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .spec-item .val {
+      font-family: var(--display);
+      font-size: 56px;
+      font-weight: 700;
+      color: var(--paper);
+      line-height: 1;
+    }
+    .spec-item .val.danger { color: var(--red); }
+    .spec-item .val.highlight { color: var(--blue); }
+
+    /* Special Outro Layout */
+    .outro-card {
+      position: absolute;
+      left: 64px;
+      right: 64px;
+      top: 40%;
+      transform: translateY(-40%);
+      text-align: center;
+      z-index: 25;
+    }
+    .outro-card .huge {
+      font-family: var(--display);
+      font-size: 128px;
+      line-height: 0.95;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+    .outro-card .huge span { color: var(--blue); }
+    .outro-card .body {
+      font-size: 46px;
+      color: var(--ash);
+      margin: 30px auto;
+      line-height: 1.5;
+    }
+    .outro-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 20px;
+      padding: 22px 42px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--blue);
+      border-radius: 8px;
+      font-family: var(--mono);
+      font-size: 30px;
+      letter-spacing: 0.16em;
+      color: var(--paper);
+      margin-top: 24px;
+    }
+    .outro-action i {
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--blue);
+      box-shadow: 0 0 14px var(--blue);
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <div id="main" data-composition-id="main" data-start="0" data-duration="54"
+       data-width="1080" data-height="1920" data-fps="30" data-poster-time="2.0">
+
+    <div class="tech-bg"></div>
+    <div class="grid-mesh"></div>
+    <div class="flash-overlay" id="flash"></div>
+
+    <!-- SCENE 1: THE HOOK (0.0 - 7.8s) -->
+    <section id="s1" class="scene s1">
+      <div class="upper-section">
+        <h1 class="headline">ANTHROPIC.<br><span>REPORT.</span></h1>
+      </div>
+      <div class="central-viewport">
+        <div class="viewport-header">
+          <div class="dots"><i class="active"></i><i></i><i></i></div>
+          <div>ECONOMIC RESEARCH // DOSSIER II</div>
+        </div>
+        <div class="viewport-content" style="background: url('./assets/chart_hiring_drop.png') center/cover no-repeat;" role="img" aria-label="Hiring Crash Chart"></div>
+        <div class="viewport-hud">
+          <div class="viewport-badge">SHOCK REPORT</div>
+          <div>LABOUR MARKET SHIFT</div>
+        </div>
+      </div>
+      <div class="lower-section">
+        <p class="narrative">科技界最震撼的劳动力报告续篇来了。Anthropic 最新披露：初级技术岗正在经历历史性清洗。</p>
+        <div class="spec-grid">
+          <div class="spec-item">
+            <span class="label">HIRING SHARE</span>
+            <span class="val danger">27% → 9%</span>
+          </div>
+          <div class="spec-item">
+            <span class="label">AGENT LEVER</span>
+            <span class="val highlight">6x FACTOR</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 2: THE 27% -> 9% CRASH (7.8 - 15.6s) -->
+    <section id="s2" class="scene s2">
+      <div class="upper-section">
+        <h2 class="headline">ENTRY-LEVEL<br><span class="danger">CRASH.</span></h2>
+      </div>
+      <div class="central-viewport">
+        <div class="viewport-header">
+          <div class="dots"><i class="active"></i><i></i><i></i></div>
+          <div>DATA INSPECTOR // JUNIOR SWE SHARE</div>
+        </div>
+        <img class="viewport-content" src="./assets/chart_hiring_drop.png" alt="Hiring Drop Curve" style="object-fit:cover;">
+        <div class="viewport-hud">
+          <div class="viewport-badge">DATA: -67.5% COLLAPSE</div>
+          <div>ALL TECH OPENINGS</div>
+        </div>
+      </div>
+      <div class="lower-section">
+        <p class="narrative">招聘池发生剧变。初级软件岗位的招聘占比，从两年前的百分之二十七，断崖式跌落到百分之九。</p>
+        <div class="spec-grid">
+          <div class="spec-item">
+            <span class="label">PEAK LEVEL (2022)</span>
+            <span class="val">27.4%</span>
+          </div>
+          <div class="spec-item">
+            <span class="label">CURRENT LEVEL (2026)</span>
+            <span class="val danger">8.9%</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 3: 6X WORK HOURS LEVER (15.6 - 23.7s) -->
+    <section id="s3" class="scene s3">
+      <div class="upper-section">
+        <h2 class="headline">6X OUTPUT<br><span>MULTIPLIER.</span></h2>
+      </div>
+      <div class="central-viewport">
+        <div class="viewport-header">
+          <div class="dots"><i class="active"></i><i></i><i></i></div>
+          <div>OUTPUT MULTIPLIER // AGENT VS HUMAN</div>
+        </div>
+        <img class="viewport-content" src="./assets/chart_agent_hours.png" alt="Agent Hours Chart" style="object-fit:cover;">
+        <div class="viewport-hud">
+          <div class="viewport-badge">6.2x LEVERAGE</div>
+          <div>AUTONOMOUS THROUGHPUT</div>
+        </div>
+      </div>
+      <div class="lower-section">
+        <p class="narrative">背后的核心推手，是 AI 智能体集群。在真实工业代码库中，Agent 的有效工时已达人类约六倍。</p>
+        <div class="spec-grid">
+          <div class="spec-item">
+            <span class="label">HUMAN ENGINEER</span>
+            <span class="val">40 HRS/WK</span>
+          </div>
+          <div class="spec-item">
+            <span class="label">AI AGENT SWARM</span>
+            <span class="val highlight">248 HRS/WK</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 4: CODE ENGINE DEMO (23.7 - 31.6s) -->
+    <section id="s4" class="scene s4">
+      <div class="upper-section">
+        <h2 class="headline">AUTONOMOUS<br><span>SWARM.</span></h2>
+      </div>
+      <div class="central-viewport">
+        <div class="viewport-header">
+          <div class="dots"><i class="active"></i><i></i><i></i></div>
+          <div>CLAUDE 3.5 SONNET // REFACTOR RUNTIME</div>
+        </div>
+        <video id="agent-vid" class="viewport-content" src="./assets/case_agent_terminal.mp4" muted playsinline
+               data-start="23.7" data-duration="7.9" data-media-start="0" data-track-index="0"></video>
+        <div class="viewport-hud">
+          <div class="viewport-badge">TEST: 100% GREEN</div>
+          <div>4 PARALLEL WORKERS</div>
+        </div>
+      </div>
+      <div class="lower-section">
+        <p class="narrative">看这个端到端重构现场。Claude 3.5 自主完成架构拆解、接口重写、单元测试与自动化提交。</p>
+        <div class="spec-grid">
+          <div class="spec-item">
+            <span class="label">TEST PASS RATE</span>
+            <span class="val highlight">100% (42/42)</span>
+          </div>
+          <div class="spec-item">
+            <span class="label">PARALLEL AGENTS</span>
+            <span class="val">4 WORKERS</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 5: COMPUTER USE DEMO (31.6 - 38.9s) -->
+    <section id="s5" class="scene s5">
+      <div class="upper-section">
+        <h2 class="headline">COMPUTER<br><span>USE.</span></h2>
+      </div>
+      <div class="central-viewport">
+        <div class="viewport-header">
+          <div class="dots"><i class="active"></i><i></i><i></i></div>
+          <div>DESKTOP AUTOMATION // TOOL HARNESS</div>
+        </div>
+        <video id="cu-vid" class="viewport-content" src="./assets/case_computer_use.mp4" muted playsinline
+               data-start="31.6" data-duration="7.3" data-media-start="0" data-track-index="1"></video>
+        <div class="viewport-hud">
+          <div class="viewport-badge">UNATTENDED LEVEL 4</div>
+          <div>LATENCY: 120ms</div>
+        </div>
+      </div>
+      <div class="lower-section">
+        <p class="narrative">配合计算机操控能力，智能体跨工具自主调试、模拟点击与修复报错，全程无需人工干预。</p>
+        <div class="spec-grid">
+          <div class="spec-item">
+            <span class="label">HUMAN SUPERVISION</span>
+            <span class="val">OPTIONAL</span>
+          </div>
+          <div class="spec-item">
+            <span class="label">CONFIDENCE</span>
+            <span class="val highlight">0.99 SCORE</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 6: INVERTED PYRAMID (38.9 - 47.1s) -->
+    <section id="s6" class="scene s6">
+      <div class="upper-section">
+        <h2 class="headline">INVERTED<br><span>PYRAMID.</span></h2>
+      </div>
+      <div class="central-viewport">
+        <div class="viewport-header">
+          <div class="dots"><i class="active"></i><i></i><i></i></div>
+          <div>LABOUR MARKET // ORG RESTRUCTURE</div>
+        </div>
+        <div class="viewport-content" style="background: url('./assets/chart_agent_hours.png') center/cover no-repeat;" role="img" aria-label="Org Structure"></div>
+        <div class="viewport-hud">
+          <div class="viewport-badge">PARADIGM SHIFT</div>
+          <div>1 ARCHITECT + AGENTS</div>
+        </div>
+      </div>
+      <div class="lower-section">
+        <p class="narrative">研发团队从金字塔变成倒三角。少数资深架构师搭配数十个 Agent，彻底改写软件人均产出。</p>
+        <div class="spec-grid">
+          <div class="spec-item">
+            <span class="label">ORG STRUCTURE</span>
+            <span class="val">INVERTED</span>
+          </div>
+          <div class="spec-item">
+            <span class="label">THROUGHPUT LEVER</span>
+            <span class="val highlight">10x PER-CAPITA</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 7: OUTRO (47.1 - 54.0s) -->
+    <section id="s7" class="scene s7">
+      <div class="outro-card">
+        <h2 class="huge">THE NEW<br><span>ORDER.</span></h2>
+        <p class="body">初级开发者的成长路径正在被重构。<br>这不再是演习，新研发秩序已经开启。</p>
+        <div class="outro-action">
+          <i></i>
+          <span>SUBSCRIBE FOR FRONTIER AI DOSSIERS</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- AUDIO TRACKS -->
+    <audio id="music" src="./assets/music.wav" data-start="0" data-duration="54" data-track-index="2" data-volume="0.22" preload="auto"></audio>
+    <audio id="voice1" src="./assets/voice_01.wav" data-start="0.4" data-duration="7.44" data-track-index="3" data-volume="1.0" preload="auto"></audio>
+    <audio id="voice2" src="./assets/voice_02.wav" data-start="7.85" data-duration="7.75" data-track-index="4" data-volume="1.0" preload="auto"></audio>
+    <audio id="voice3" src="./assets/voice_03.wav" data-start="15.65" data-duration="8.04" data-track-index="5" data-volume="1.0" preload="auto"></audio>
+    <audio id="voice4" src="./assets/voice_04.wav" data-start="23.75" data-duration="7.87" data-track-index="6" data-volume="1.0" preload="auto"></audio>
+    <audio id="voice5" src="./assets/voice_05.wav" data-start="31.65" data-duration="7.27" data-track-index="7" data-volume="1.0" preload="auto"></audio>
+    <audio id="voice6" src="./assets/voice_06.wav" data-start="38.95" data-duration="8.18" data-track-index="8" data-volume="1.0" preload="auto"></audio>
+    <audio id="voice7" src="./assets/voice_07.wav" data-start="47.15" data-duration="6.31" data-track-index="10" data-volume="1.0" preload="auto"></audio>
+
+  </div>
+
+  <script>
+    const DURATION = 54.0;
+    const scenes = ["s1", "s2", "s3", "s4", "s5", "s6", "s7"];
+    
+    scenes.forEach((id, idx) => {
+      const el = document.getElementById(id);
+      el.style.opacity = idx === 0 ? "1" : "0";
+      el.style.visibility = idx === 0 ? "visible" : "hidden";
+    });
+
+    const tl = gsap.timeline({ paused: true });
+    const clock = { t: 0 };
+    tl.to(clock, { t: DURATION, duration: DURATION, ease: "none" }, 0);
+
+    // Scene Cuts Timeline
+    const cutMoments = [
+      { at: 7.8, from: "s1", to: "s2" },
+      { at: 15.6, from: "s2", to: "s3" },
+      { at: 23.7, from: "s3", to: "s4" },
+      { at: 31.6, from: "s4", to: "s5" },
+      { at: 38.9, from: "s5", to: "s6" },
+      { at: 47.1, from: "s6", to: "s7" }
+    ];
+
+    cutMoments.forEach((cut) => {
+      tl.set("#" + cut.from, { visibility: "hidden" }, cut.at);
+      tl.set("#" + cut.to, { visibility: "visible" }, cut.at);
+      tl.to("#" + cut.to, { opacity: 1, duration: 0.05, ease: "none" }, cut.at);
+      tl.fromTo(
+        "#flash",
+        { opacity: 0.55 },
+        { opacity: 0, duration: 0.16, ease: "power2.out", immediateRender: false },
+        cut.at
+      );
+    });
+
+    // SCENE 1 ANIMATIONS (0 - 7.8s)
+    tl.from("#s1 .headline", { opacity: 0, y: 40, duration: 0.7, ease: "expo.out" }, 0.25);
+    tl.from("#s1 .central-viewport", { opacity: 0, scale: 0.94, duration: 0.8, ease: "power3.out" }, 0.3);
+    tl.from("#s1 .lower-section", { opacity: 0, y: 25, duration: 0.6, ease: "power2.out" }, 0.6);
+
+    // SCENE 2 ANIMATIONS (7.8 - 15.6s)
+    tl.from("#s2 .headline", { opacity: 0, y: 35, duration: 0.6, ease: "expo.out" }, 7.9);
+    tl.from("#s2 .central-viewport", { opacity: 0, scale: 0.95, duration: 0.7, ease: "power2.out" }, 7.9);
+    tl.from("#s2 .narrative", { opacity: 0, y: 20, duration: 0.5, ease: "power2.out" }, 8.2);
+    tl.from("#s2 .spec-item", { opacity: 0, y: 15, duration: 0.4, stagger: 0.1, ease: "power2.out" }, 8.4);
+
+    // SCENE 3 ANIMATIONS (15.6 - 23.7s)
+    tl.from("#s3 .headline", { opacity: 0, y: 35, duration: 0.6, ease: "expo.out" }, 15.7);
+    tl.from("#s3 .central-viewport", { opacity: 0, scale: 0.95, duration: 0.7, ease: "power2.out" }, 15.7);
+    tl.from("#s3 .narrative", { opacity: 0, y: 20, duration: 0.5, ease: "power2.out" }, 16.0);
+    tl.from("#s3 .spec-item", { opacity: 0, y: 15, duration: 0.4, stagger: 0.1, ease: "power2.out" }, 16.2);
+
+    // SCENE 4 ANIMATIONS (23.7 - 31.6s)
+    tl.from("#s4 .headline", { opacity: 0, y: 35, duration: 0.6, ease: "expo.out" }, 23.8);
+    tl.from("#s4 .central-viewport", { opacity: 0, scale: 0.95, duration: 0.7, ease: "power2.out" }, 23.8);
+    tl.from("#s4 .narrative", { opacity: 0, y: 20, duration: 0.5, ease: "power2.out" }, 24.1);
+    tl.from("#s4 .spec-item", { opacity: 0, y: 15, duration: 0.4, stagger: 0.1, ease: "power2.out" }, 24.3);
+
+    // SCENE 5 ANIMATIONS (31.6 - 38.9s)
+    tl.from("#s5 .headline", { opacity: 0, y: 35, duration: 0.6, ease: "expo.out" }, 31.7);
+    tl.from("#s5 .central-viewport", { opacity: 0, scale: 0.95, duration: 0.7, ease: "power2.out" }, 31.7);
+    tl.from("#s5 .narrative", { opacity: 0, y: 20, duration: 0.5, ease: "power2.out" }, 32.0);
+    tl.from("#s5 .spec-item", { opacity: 0, y: 15, duration: 0.4, stagger: 0.1, ease: "power2.out" }, 32.2);
+
+    // SCENE 6 ANIMATIONS (38.9 - 47.1s)
+    tl.from("#s6 .headline", { opacity: 0, y: 35, duration: 0.6, ease: "expo.out" }, 39.0);
+    tl.from("#s6 .central-viewport", { opacity: 0, scale: 0.95, duration: 0.7, ease: "power2.out" }, 39.0);
+    tl.from("#s6 .narrative", { opacity: 0, y: 20, duration: 0.5, ease: "power2.out" }, 39.3);
+    tl.from("#s6 .spec-item", { opacity: 0, y: 15, duration: 0.4, stagger: 0.1, ease: "power2.out" }, 39.5);
+
+    // SCENE 7 ANIMATIONS (47.1 - 54.0s)
+    tl.from("#s7 .huge", { opacity: 0, y: 50, duration: 0.7, ease: "expo.out" }, 47.2);
+    tl.from("#s7 .body", { opacity: 0, y: 20, duration: 0.6, ease: "power2.out" }, 47.5);
+    tl.from("#s7 .outro-action", { opacity: 0, scale: 0.95, duration: 0.5, ease: "back.out(1.5)" }, 47.8);
+    tl.to("#s7 .outro-card", { opacity: 0, duration: 0.6, ease: "power2.in" }, 53.2);
+
+    window.__timelines = window.__timelines || {};
+    window.__timelines["main"] = tl;
+  </script>
+</body>
+</html>

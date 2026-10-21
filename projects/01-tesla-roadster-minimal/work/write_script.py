@@ -1,0 +1,90 @@
+from pathlib import Path
+import json
+
+segments = [
+    {
+        "id": "S01",
+        "start": 0.0,
+        "end": 3.0,
+        "text": "车飞起来，最难的不是起飞。",
+        "emotion": "压低、留悬念",
+        "emphasis": "不是起飞",
+    },
+    {
+        "id": "S02",
+        "start": 3.3,
+        "end": 11.0,
+        "text": "十月十五日，特斯拉发布新 Roadster。Rocket 版用十个冷气推进器，演示越障、翻转、落地。",
+        "emotion": "新闻播报，清晰有力",
+        "emphasis": "十个冷气推进器",
+    },
+    {
+        "id": "S03",
+        "start": 11.3,
+        "end": 17.7,
+        "text": "原理不神秘：高压空气喷出，产生反作用力。不烧燃料，但只够短促动作。",
+        "emotion": "解释，略放缓",
+        "emphasis": "反作用力；短促动作",
+    },
+    {
+        "id": "S04",
+        "start": 18.0,
+        "end": 26.1,
+        "text": "厂商说，Rocket 连接六百升压缩空气；Thrust 只在后部装推进器，目标零到六十英里低于一秒。",
+        "emotion": "克制转述",
+        "emphasis": "厂商说；六百升",
+    },
+    {
+        "id": "S05",
+        "start": 26.4,
+        "end": 34.2,
+        "text": "但演示不是独立测试。飞行版未获公共道路批准；美国联邦航空局说，它不符合飞机定义。",
+        "emotion": "转折，变冷",
+        "emphasis": "未获批准；不符合",
+    },
+    {
+        "id": "S06",
+        "start": 34.5,
+        "end": 41.9,
+        "text": "量产计划是二〇二八年，价格没公布，Rocket 只邀请购买。监管归谁，仍无明确答案。",
+        "emotion": "现实核查",
+        "emphasis": "计划；没公布；没有明确答案",
+    },
+    {
+        "id": "S07",
+        "start": 42.2,
+        "end": 49.3,
+        "text": "飞行只是最容易被看见的部分。真正难的是，让每次喷射都可靠，每次落地都可预期。",
+        "emotion": "观点，沉稳",
+        "emphasis": "可靠；可预期",
+    },
+    {
+        "id": "S08",
+        "start": 49.6,
+        "end": 55.6,
+        "text": "这是一次把航天姿态带进汽车的豪赌，也把飞行汽车的监管空白摆上了台面。",
+        "emotion": "收束，判断",
+        "emphasis": "豪赌；监管空白",
+    },
+    {
+        "id": "S09",
+        "start": 55.9,
+        "end": 62.1,
+        "text": "飞起来，是发布会的高光。能不能安全、合规地重复，才是产品化的开始。",
+        "emotion": "记忆点，坚定",
+        "emphasis": "重复；开始",
+    },
+    {
+        "id": "S10",
+        "start": 62.4,
+        "end": 65.7,
+        "text": "科技快播，看见炫技，也追问代价。",
+        "emotion": "品牌收尾，轻",
+        "emphasis": "代价",
+    },
+]
+
+out = Path(__file__).resolve().parent / "narration.json"
+out.write_text(json.dumps(segments, ensure_ascii=False, indent=2), encoding="utf-8")
+print(out)
+print(sum(len(s["text"]) for s in segments))

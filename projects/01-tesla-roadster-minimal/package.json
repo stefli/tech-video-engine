@@ -1,0 +1,28 @@
+{
+  "name": "roadster-60-9-16-30-fps",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts RoadsterFilm outputs/roadster-v2-68s.mp4 --concurrency=2",
+    "render:preview": "remotion render src/index.ts RoadsterFilm outputs/preview-v5.mp4 --concurrency=2 --scale=0.5",
+    "audio": "python work/tts.py && python work/make_audio.py && ffmpeg -y -v error -i work/mix.wav -c:a aac -b:a 192k public/assets/mix.m4a",
+    "build": "npm run typecheck && npm run render",
+    "still": "remotion still src/index.ts RoadsterFilm outputs/contact-sheet.png --frame=1000",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@remotion/cli": "4.0.537",
+    "@types/react": "19.1.10",
+    "@types/react-dom": "19.1.7",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.537",
+    "typescript": "5.9.2"
+  }
+}

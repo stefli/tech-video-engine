@@ -1,0 +1,54 @@
+<template id="scene-05-template">
+  <div data-composition-id="scene-05" data-width="1080" data-height="1920">
+    <style>
+      @font-face {
+        font-family: "NotoSansSC";
+        src: url("../assets/NotoSansSC-VF.ttf") format("truetype");
+        font-weight: 100 900;
+        font-display: block;
+      }
+      [data-composition-id="scene-05"] {
+        position: relative; width: 1080px; height: 1920px; overflow: hidden;
+        background: #090B0C; color: #F3F0E8; font-family: "NotoSansSC", sans-serif;
+      }
+      .s5-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 48%; filter: brightness(0.68); }
+      .badge-amber-lg { display: inline-flex; padding: 12px 22px; font-size: 28px; font-weight: 900; border-radius: 4px; border: 2px solid #E8B45A; color: #E8B45A; background: rgba(0,0,0,0.85); }
+      .card-box {
+        background: #131719;
+        border: 1.5px solid rgba(243,240,232,0.18);
+        border-radius: 8px;
+        padding: 26px 30px;
+        
+      }
+    </style>
+    <img class="s5-bg" src="assets/road-rear.jpg" />
+    
+    <!-- 标题区 (top: 340px，高约 200px，底部至 540px) -->
+    <div style="position: absolute; left: 78px; right: 140px; top: 340px;">
+      <div style="font-size: 76px; font-weight: 900; line-height: 1.15; letter-spacing: -2.8px; margin-top: 0px; ">
+        能飞，<br />不等于能上路。<br /><span style="color: #FFD175;">也不等于能随便飞！</span>
+      </div>
+    </div>
+    
+    <!-- 卡片区 (推移至 top: 680px，与上方大标题拉开 140px 间距，绝对宽敞) -->
+    <div class="card-box" style="position: absolute; left: 78px; right: 140px; top: 680px;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; font-size: 32px; font-weight: 750;">
+        <div style="border-right: 1.5px solid rgba(243,240,232,0.18); padding-right: 20px;">
+          <span style="color: #FFD175; font-size: 36px; font-weight: 900;">公共道路</span><br />
+          Rocket 飞行版<br />未获上路批准
+        </div>
+        <div>
+          <span style="color: #FFD175; font-size: 36px; font-weight: 900;">FAA 航空局</span><br />
+          明确表态：<br />不符合“飞机”定义
+        </div>
+      </div>
+    </div>
+    
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.from(".s5-bg", { scale: 1.05, duration: 8.4, ease: "none" }, 0);
+      window.__timelines["scene-05"] = tl;
+    </script>
+  </div>
+</template>

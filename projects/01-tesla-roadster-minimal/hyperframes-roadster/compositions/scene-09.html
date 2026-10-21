@@ -1,0 +1,40 @@
+<template id="scene-09-template">
+  <div data-composition-id="scene-09" data-width="1080" data-height="1920">
+    <style>
+      @font-face {
+        font-family: "NotoSansSC";
+        src: url("../assets/NotoSansSC-VF.ttf") format("truetype");
+        font-weight: 100 900;
+        font-display: block;
+      }
+      [data-composition-id="scene-09"] {
+        position: relative; width: 1080px; height: 1920px; overflow: hidden;
+        background: #090B0C; color: #F3F0E8; font-family: "NotoSansSC", sans-serif;
+      }
+      .s9-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.72); }
+      .badge-lg { display: inline-flex; padding: 12px 22px; font-size: 28px; font-weight: 900; border-radius: 4px; border: 2px solid #FF6138; color: #FF6138; background: rgba(0,0,0,0.85); }
+    </style>
+    <img class="s9-bg" src="assets/dawn-side.jpg" />
+    
+    <!-- 标题区 (top: 360px) -->
+    <div style="position: absolute; left: 78px; right: 140px; top: 360px;">
+      <div style="font-size: 76px; font-weight: 900; line-height: 1.15; letter-spacing: -2.4px; margin-top: 0px;">
+        飞起来，<br />只是发布会的高光。
+      </div>
+    </div>
+    
+    <!-- 内容区 (top: 660px，间隙 80px) -->
+    <div style="position: absolute; left: 78px; right: 140px; top: 660px; border-top: 2px solid rgba(243,240,232,0.22); padding-top: 26px;">
+      <div style="font-size: 46px; line-height: 1.45; font-weight: 800; ">
+        安全、合规地在现实世界重复运行，<br />
+        <span style="color: #FF6138;">才是产品化的真正开始！</span>
+      </div>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.from(".s9-bg", { scale: 1.06, duration: 5.9, ease: "none" }, 0);
+      window.__timelines["scene-09"] = tl;
+    </script>
+  </div>
+</template>

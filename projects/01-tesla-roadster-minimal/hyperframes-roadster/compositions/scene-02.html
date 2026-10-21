@@ -1,0 +1,50 @@
+<template id="scene-02-template">
+  <div data-composition-id="scene-02" data-width="1080" data-height="1920">
+    <style>
+      @font-face {
+        font-family: "NotoSansSC";
+        src: url("../assets/NotoSansSC-VF.ttf") format("truetype");
+        font-weight: 100 900;
+        font-display: block;
+      }
+      [data-composition-id="scene-02"] {
+        position: relative; width: 1080px; height: 1920px; overflow: hidden;
+        background: #090B0C; color: #F3F0E8; font-family: "NotoSansSC", sans-serif;
+      }
+      .s2-still { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; opacity: 0; }
+      .s2-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+      .s2-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(9,11,12,0.85) 0%, rgba(9,11,12,0.15) 35%, rgba(9,11,12,0.7) 68%, rgba(9,11,12,0.98) 100%); }
+      .s2-top { position: absolute; left: 78px; right: 140px; top: 360px; }
+      .s2-mid { position: absolute; left: 78px; right: 140px; top: 720px; }
+      .badge-lg { display: inline-flex; padding: 12px 22px; font-size: 28px; font-weight: 900; border-radius: 4px; }
+    </style>
+    <!-- 后半段接官方夜间腾空全景大图，杜绝任何黑屏 -->
+    <img id="s2-still-bg" class="s2-still clip" data-start="0" data-duration="8.6" data-track-index="0" src="assets/hero.jpg" />
+    <!-- 扣题核心动作视频：车辆在空中完成翻转并平稳着地落回地面实录 (4.0s)，无任何黑帧 -->
+    <video id="s2-video-bg" class="s2-video clip" data-start="0" data-duration="4.0" data-track-index="1" src="assets/flip-landing-video.mp4" muted playsinline></video>
+    <div class="s2-overlay"></div>
+    <div class="s2-top">
+      <div style="font-size: 78px; font-weight: 900; line-height: 1.15; letter-spacing: -2.4px; margin-top: 0px; ">
+        新一代 Roadster，<br /><span style="color: #FF6138;">空中翻转、平稳着陆！</span>
+      </div>
+    </div>
+    <div class="s2-mid">
+      <div style="display: flex; gap: 16px; margin-bottom: 22px; flex-wrap: wrap;">
+        <div class="badge-lg" style="border: 2px solid #E8B45A; color: #E8B45A; background: #131719;">官方动态演示</div>
+        <div class="badge-lg" style="border: 2px solid #F3F0E8; color: #F3F0E8; background: #131719;">10 个冷气推进器</div>
+      </div>
+      <div style="font-size: 44px; line-height: 1.45; font-weight: 750; ">
+        越过障碍车队，空中翻转姿态，<br />稳定着陆落回地面！
+      </div>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.from(".s2-top", { y: 24, opacity: 0, duration: 0.7, ease: "power2.out" }, 0.2);
+      tl.from(".s2-mid", { y: 24, opacity: 0, duration: 0.7, ease: "power2.out" }, 0.5);
+      // 视频播放到 3.5s 时，平滑淡入底图，实现天衣无缝的视听转场过渡
+      tl.fromTo("#s2-still-bg", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power1.inOut" }, 3.4);
+      window.__timelines["scene-02"] = tl;
+    </script>
+  </div>
+</template>

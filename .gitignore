@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build caches & engines
+.hyperframes/
+.remotion/
+renders/
+dist/
+
+# Large media artifacts (>50MB, reproducible via scripts)
+*.mp4
+*.m3u8
+*.ts
+*.mov
+!projects/01-tesla-roadster-minimal/hyperframes-roadster/assets/*.mp4
+
+# OS & Logs
+.DS_Store
+Thumbs.db
+*.log

@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1080, height=1920">
+  <meta name="od-motion-output" content="video">
+  <meta name="od-motion-audio" content="required">
+  <link rel="alternate" type="video/mp4" href="./opencode_security_agent_4k.mp4">
+  <title>OpenCode 24h 攻防 · 安全观点 4K</title>
+  <script src="./assets/gsap.min.js"></script>
+  <style>
+    :root {
+      --ink: #030712;
+      --ink-card: #080e1a;
+      --paper: #f8fafc;
+      --ash: #cbd5e1;
+      --gray: #64748b;
+      --blue: #38bdf8;
+      --red: #f43f5e;
+      --red-glow: rgba(244, 63, 94, 0.45);
+      --green: #10b981;
+      --border: rgba(148, 163, 184, 0.22);
+      --display: "Bahnschrift", "DIN Alternate", sans-serif;
+      --cjk: "Microsoft YaHei", "PingFang SC", sans-serif;
+      --mono: "Cascadia Mono", "Consolas", monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      background: var(--ink);
+    }
+    body {
+      color: var(--paper);
+      font-family: var(--cjk);
+      -webkit-font-smoothing: antialiased;
+    }
+    #main {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      background: var(--ink);
+    }
+
+    /* Global Cyber Threat Mesh */
+    .tech-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(244, 63, 94, 0.12) 0%, transparent 60%),
+        radial-gradient(circle at 50% 85%, rgba(15, 23, 42, 0.95) 0%, transparent 65%),
+        var(--ink);
+      pointer-events: none;
+    }
+    .grid-mesh {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(148, 163, 184, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148, 163, 184, 0.035) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .scene {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 5;
+    }
+
+    .flash-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 40;
+      pointer-events: none;
+      background: #ffe4e6;
+      opacity: 0;
+    }
+
+    /* Centralized Visual Hierarchy (Top Safe Zone: 0-220px; Bottom Safe Zone: 1360-1920px) */
+    .upper-section {
+      position: absolute;
+      top: 220px;
+      left: 64px;
+      right: 64px;
+      z-index: 20;
+    }
+    .headline {
+      font-family: var(--display);
+      font-size: 104px;
+      font-weight: 700;
+      line-height: 0.94;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      color: #fff;
+    }
+    .headline span { color: var(--blue); }
+    .headline span.danger { color: var(--red); }
+    .headline span.success { color: var(--green); }
+
+    /* Central 16:9 Inspector Viewport */
+    .central-viewport {
+      position: absolute;
+      top: 450px;
+      left: 64px;
+      right: 64px;
+      height: 556px;
+      background: #02040a;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.9), 0 0 40px rgba(56, 189, 248, 0.12);
+      overflow: hidden;
+      z-index: 10;
+    }
+    .central-viewport::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 48px;
+      background: rgba(15, 23, 42, 0.95);
+      border-bottom: 1px solid var(--border);
+      z-index: 12;
+    }
+    .viewport-header {
+      position: absolute;
+      top: 12px;
+      left: 20px;
+      right: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 22px;
+      letter-spacing: 0.14em;
+      color: var(--ash);
+      z-index: 15;
+    }
+    .viewport-header .dots {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .viewport-header .dots i {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: rgba(148, 163, 184, 0.3);
+      display: block;
+    }
+    .viewport-header .dots i.alert {
+      background: var(--red);
+      box-shadow: 0 0 10px var(--red);
+    }
+    .viewport-header .dots i.active {
+      background: var(--blue);
+      box-shadow: 0 0 10px var(--blue);
+    }
+    .viewport-content {
+      position: absolute;
+      top: 48px;
+      left: 0;
+      width: 100%;
+      height: calc(100% - 48px);
+      background: #020617;
+      padding: 24px;
+      overflow: hidden;
+      font-family: var(--mono);
+    }
+    .viewport-hud {
+      position: absolute;
+      bottom: 14px;
+      left: 20px;
+      right: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 22px;
+      color: rgba(246, 248, 250, 0.85);
+      z-index: 15;
+      pointer-events: none;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+    }
+    .viewport-badge {
+      padding: 6px 14px;
+      background: rgba(4, 7, 12, 0.9);
+      border: 1px solid rgba(244, 63, 94, 0.6);
+      color: var(--red);
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 20px;
+    }
+    .viewport-badge.safe {
+      border-color: rgba(16, 185, 129, 0.6);
+      color: var(--green);
+    }
+    .viewport-badge.active {
+      border-color: rgba(56, 189, 248, 0.6);
+      color: var(--blue);
+    }
+
+    /* Terminal Stream Styles */
+    .term-line {
+      font-size: 24px;
+      line-height: 1.7;
+      white-space: nowrap;
+      opacity: 0.95;
+    }
+    .term-line.cmd { color: #f8fafc; font-weight: 700; }
+    .term-line.err { color: var(--red); font-weight: 700; }
+    .term-line.ok { color: var(--green); font-weight: 700; }
+    .term-line.info { color: var(--blue); }
+    .term-line.code-del { color: #f87171; background: rgba(239, 68, 68, 0.15); padding: 2px 6px; }
+    .term-line.code-add { color: #4ade80; background: rgba(34, 197, 94, 0.15); padding: 2px 6px; }
+
+    /* Lower Info Section */
+    .lower-section {
+      position: absolute;
+      top: 1036px;
+      left: 64px;
+      right: 64px;
+      z-index: 20;
+    }
+    .narrative {
+      font-size: 42px;
+      line-height: 1.45;
+      font-weight: 350;
+      color: var(--ash);
+      margin-bottom: 24px;
+    }
+    .spec-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .spec-item {
+      background: rgba(8, 14, 26, 0.9);
+      border: 1px solid var(--border);
+      padding: 18px 24px;
+      border-radius: 6px;
+    }
+    .spec-item .label {
+      font-family: var(--mono);
+      font-size: 26px;
+      color: var(--gray);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .spec-item .val {
+      font-family: var(--display);
+      font-size: 56px;
+      font-weight: 700;
+      color: var(--paper);
+      line-height: 1;
+    }
+    .spec-item .val.danger { color: var(--red); }
+    .spec-item .val.highlight { color: var(--blue); }
+    .spec-item .val.success { color: var(--green); }
+
+    /* Outro Layout */
+    .outro-card {
+      position: absolute;
+      left: 64px;
+      right: 64px;
+      top: 40%;
+      transform: translateY(-40%);
+      text-align: center;
+      z-index: 25;
+    }
+    .outro-card .huge {
+      font-family: var(--display);
+      font-size: 124px;
+      line-height: 0.95;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+    .outro-card .huge span { color: var(--blue); }
+    .outro-card .body {
+      font-size: 46px;
+      color: var(--ash);
+      margin: 30px auto;
+      line-height: 1.5;
+    }
+    .outro-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 20px;
+      padding: 22px 42px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--blue);
+      border-radius: 8px;
+      font-family: var(--mono);
+      font-size: 30px;
+      letter-spacing: 0.16em;
+      color: var(--paper);
+      margin-top: 24px;
+    }
+    .outro-action i {
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--blue);
+      box-shadow: 0 0 14px var(--blue);
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <div id="main" data-composition-id="main" data-start="0" data-duration="54"
+       data-width="1080" data-height="1920" data-fps="30" data-poster-time="2.0">
+
+    <div class="tech-bg"></div>
+    <div class="grid-mesh"></div>
+    <div class="flash-overlay" id="flash"></div>
+
+    <!-- SCENE 1: THE HOOK (0.0 - 7.4s) -->
+    <section id="s1" class="scene s1">
+      <div class="upper-section">
+        <h1 class="headline">OPENCODE.<br><span class="danger">24H ATTACK.</span></h1>
+      </div>
+      <div class="central-viewport">
+        <div class="viewport-header">
+          <div class="dots"><i class="alert"></i><i></i><i></i></div>
+          <div>TELEMETRY // GLOBAL AI RED TEAM ATTACK</div>
+        </div>
+        <div class="viewport-content">
+          <div class="term-line cmd">[ALERT] 24/7 AUTONOMOUS PENETRATION ACTIVE</div>
+          <div class="term-line err">> Inbound Fuzzing Streams: 48,200 requests/sec</div>
+          <div class="term-line info">> Target Codebase: OpenCode Core Infrastructure</div>
+          <div class="term-line">> Vector 01: Memory safety & buffer overflow probe</div>
+          <div class="term-line">> Vector 02: Dependency chain poison attempt</div>
+          <div class="term-line ok">> Status: 100% AI Automated Offensive Swarms</div>
+        </div>
+        <div class="viewport-hud">
+          <div class="viewport-badge">MACHINE VS MACHINE</div>
+          <div>HIGH PRIORITY ALERT</div>
+        </div>
+      </div>
+      <div class="lower-section">
+        <p class="narrative">开源代码库 OpenCode 遭遇 24 小时 AI 攻防。网络安全，正式进入机器对抗机器的时代。</p>
+        <div class="spec-grid">
+          <div class="spec-item">
+            <span class="label">ATTACK CYCLE</span>
+            <span class="val danger">24H UNSTOPPABLE</span>
+          </div>
+          <div class="spec-item">
+            <span class="label">THREAT SPEED</span>
+            <span class="val highlight">MILLI-SECONDS</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 2: ASYMMETRY (7.4 - 15.2s) -->
+    <section id="s2" class="scene s2">
+      <div class="upper-section">
+        <h2 class="headline">HUMAN MODEL<br><span class="danger">COLLAPSED.</span></h2>
+      </div>
+      <div class="central-viewport">
+        <div class="viewport-header">
+          <div class="dots"><i class="alert"></i><i></i><i></i></div>
+          <div>ASYMMETRY METRICS // HUMAN VS MACHINE</div>
+        </div>
+        <div class="viewport-content">
+          <div class="term-line cmd">$ audit-latency --compare-teams</div>
+          <div class="term-line err">> Human On-Call Response: 72 Hours Average</div>
+          <div class="term-line info">> AI Offensive Probe Speed: 0.04s per exploit payload</div>
+          <div class="term-line err">> Vulnerability Window: 71h 59m 59s EXPOSED</div>
+          <div class="term-line ok">> Verdict: Manual triage completely overwhelmed</div>
+          <div class="term-line cmd">[CRITICAL] Defense must match machine throughput</div>
+        </div>
+        <div class="viewport-hud">
+          <div class="viewport-badge">SYSTEM OVERLOAD</div>
+          <div>ON-CALL INSUFFICIENT</div>
+        </div>
+      </div>
+      <div class="lower-section">
+        <p class="narrative">攻击方早已全面 Agent 化，高频渗透全天候狂轰滥炸。人类值班修漏洞的传统机制彻底失效。</p>
+        <div class="spec-grid">
+          <div class="spec-item">
+            <span class="label">HUMAN TRIAGE</span>
+            <span class="val danger">72 HOURS LAG</span>
+          </div>
+          <div class="spec-item">
+            <span class="label">EXPLOIT FREQ</span>
+            <span class="val highlight">10,000 / SEC</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 3: RESIDENT DEFENSE VIEW (15.2 - 22.0s) -->
+    <section id="s3" class="scene s3">
+      <div class="upper-section">
+        <h2 class="headline">RESIDENT<br><span class="highlight">BLUE AGENT.</span></h2>
+      </div>
+      <div class="central-viewport">
+        <div class="viewport-header">
+          <div class="dots"><i class="active"></i><i></i><i></i></div>
+          <div>ARCHITECTURE // CONTINUOUS DEFENSE DAEMON</div>
+        </div>
+        <div class="viewport-content">
+          <div class="term-line cmd">[DAEMON] Resident Defense Agent v4.2 INITIALIZED</div>
+          <div class="term-line info">> Hook: Kernel eBPF + LLVM Runtime Instrumentation</div>
+          <div class="term-line ok">> Mode: 24/7 Autonomous Taint Tracking Active</div>
+          <div class="term-line">> Deep Symbolic Execution: 64 Parallel Cores</div>
+          <div class="term-line ok">> Real-time Invariant Check: 100% Coverage</div>
+        </div>
+        <div class="viewport-hud">
+          <div class="viewport-badge active">ALWAYS ON</div>
+          <div>AI VS AI DEFENSE</div>
+        </div>
+      </div>
+      <div class="lower-section">
+        <p class="narrative">以机器速度对抗机器速度。防守方也必须拥有 24 小时常驻的代码防御 Agent。</p>
+        <div class="spec-grid">
+          <div class="spec-item">
+            <span class="label">AGENT UPTIME</span>
+            <span class="val highlight">24/7 ACTIVE</span>
+          </div>
+          <div class="spec-item">
+            <span class="label">CODE INTEGRITY</span>
+            <span class="val success">CONTINUOUS</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 4: MILLISECOND TRIAGE (22.0 - 30.1s) -->
+    <section id="s4" class="scene s4">
+      <div class="upper-section">
+        <h2 class="headline">MILLISECOND<br><span>CONTAINMENT.</span></h2>
+      </div>
+      <div class="central-viewport">
+        <div class="viewport-header">
+          <div class="dots"><i class="active"></i><i></i><i></i></div>
+          <div>SANDBOX TRACE // AUTONOMOUS INTERCEPTION</div>
+        </div>
+        <div class="viewport-content">
+          <div class="term-line cmd">> [00:00.012] Intercepted raw memory overflow payload</div>
+          <div class="term-line info">> [00:00.048] Spawning micro-sandbox replica...</div>
+          <div class="term-line ok">> [00:00.120] Crash reproduced: SIGSEGV at parser.c:84</div>
+          <div class="term-line cmd">> [00:00.280] Dynamic network perimeter rule pushed</div>
+          <div class="term-line ok">> [00:00.410] Exploitation blocked. Zero data exfiltration.</div>
+        </div>
+        <div class="viewport-hud">
+          <div class="viewport-badge safe">THREAT BLOCKED</div>
+          <div>CONTAINMENT: 410ms</div>
+        </div>
+      </div>
+      <div class="lower-section">
+        <p class="narrative">看自动化防御现场。常驻 Agent 毫秒级捕获攻击载荷，在隔离沙盒中自主复现并阻断渗透链。</p>
+        <div class="spec-grid">
+          <div class="spec-item">
+            <span class="label">DETECTION SPEED</span>
+            <span class="val highlight">12 MILLISECONDS</span>
+          </div>
+          <div class="spec-item">
+            <span class="label">SANDBOX REPRO</span>
+            <span class="val success">AUTONOMOUS</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 5: AUTONOMOUS SELF-HEALING (30.1 - 38.4s) -->
+    <section id="s5" class="scene s5">
+      <div class="upper-section">
+        <h2 class="headline">CODE<br><span class="success">SELF-HEALING.</span></h2>
+      </div>
+      <div class="central-viewport">
+        <div class="viewport-header">
+          <div class="dots"><i class="active"></i><i></i><i></i></div>
+          <div>GIT HOT-PATCH STREAM // AUTO REPAIR</div>
+        </div>
+        <div class="viewport-content">
+          <div class="term-line cmd">$ git diff src/protocol/parser.c</div>
+          <div class="term-line code-del">- memcpy(dest_buf, packet->payload, packet->len);</div>
+          <div class="term-line code-add">+ if (packet->len > MAX_BUF) return ERR_OVERFLOW;</div>
+          <div class="term-line code-add">+ memcpy_s(dest_buf, MAX_BUF, packet->payload, packet->len);</div>
+          <div class="term-line ok">> Ran 254 unit tests: 254 passed (0 regression)</div>
+          <div class="term-line cmd">> Hot-patch compiled & hot-swapped into production!</div>
+        </div>
+        <div class="viewport-hud">
+          <div class="viewport-badge safe">HOT-PATCH DEPLOYED</div>
+          <div>ZERO DOWNTIME</div>
+        </div>
+      </div>
+      <div class="lower-section">
+        <p class="narrative">更关键的是代码自愈。智能体直接生成针对性安全热补丁，通过测试并自动合并，受击中实时进化。</p>
+        <div class="spec-grid">
+          <div class="spec-item">
+            <span class="label">AUTO PATCH TIME</span>
+            <span class="val highlight">3.2 SECONDS</span>
+          </div>
+          <div class="spec-item">
+            <span class="label">TEST REGRESSION</span>
+            <span class="val success">ZERO (0%)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 6: BENCHMARKS (38.4 - 45.8s) -->
+    <section id="s6" class="scene s6">
+      <div class="upper-section">
+        <h2 class="headline">SPEED &<br><span>BLOCK RATE.</span></h2>
+      </div>
+      <div class="central-viewport">
+        <div class="viewport-header">
+          <div class="dots"><i class="active"></i><i></i><i></i></div>
+          <div>SECURITY BENCHMARKS // INCIDENT REDUCTION</div>
+        </div>
+        <div class="viewport-content">
+          <div class="term-line cmd">[DEFENSE METRICS REVIEW]</div>
+          <div class="term-line ok">> Mean Time to Remediation (MTTR): 3.2s vs 72h</div>
+          <div class="term-line ok">> Zero-Day Neutralization Rate: 99.4%</div>
+          <div class="term-line info">> Architect Attention Required: < 0.1% edge alerts</div>
+          <div class="term-line">> Full Chain Forensic Provenance: Cryptographically logged</div>
+        </div>
+        <div class="viewport-hud">
+          <div class="viewport-badge safe">99.4% MITIGATION</div>
+          <div>VERIFIED BENCHMARK</div>
+        </div>
+      </div>
+      <div class="lower-section">
+        <p class="narrative">攻防响应从过去平均七十二小时，直接压缩到三点二秒。恶意漏洞阻断率达到百分之九十九。</p>
+        <div class="spec-grid">
+          <div class="spec-item">
+            <span class="label">MTTR SHIFT</span>
+            <span class="val highlight">72H → 3.2S</span>
+          </div>
+          <div class="spec-item">
+            <span class="label">BLOCK SUCCESS</span>
+            <span class="val success">99.4%</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 7: OUTRO (45.8 - 54.0s) -->
+    <section id="s7" class="scene s7">
+      <div class="outro-card">
+        <h2 class="huge">RESIDENT AGENT.<br><span>NEW PARADIGM.</span></h2>
+        <p class="body">未来的软件底座，没有常驻 Agent 的代码库都在裸奔。<br>以 AI 制 AI，安全新范式到来。</p>
+        <div class="outro-action">
+          <i></i>
+          <span>SUBSCRIBE FOR FRONTIER CYBERSECURITY</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- AUDIO TRACKS -->
+    <audio id="music" src="./assets/music.wav" data-start="0" data-duration="54" data-track-index="2" data-volume="0.22" preload="auto"></audio>
+    <audio id="voice1" src="./assets/voice_01.wav" data-start="0.4" data-duration="7.30" data-track-index="3" data-volume="1.0" preload="auto"></audio>
+    <audio id="voice2" src="./assets/voice_02.wav" data-start="7.4" data-duration="7.80" data-track-index="4" data-volume="1.0" preload="auto"></audio>
+    <audio id="voice3" src="./assets/voice_03.wav" data-start="15.2" data-duration="6.67" data-track-index="5" data-volume="1.0" preload="auto"></audio>
+    <audio id="voice4" src="./assets/voice_04.wav" data-start="22.0" data-duration="8.06" data-track-index="6" data-volume="1.0" preload="auto"></audio>
+    <audio id="voice5" src="./assets/voice_05.wav" data-start="30.1" data-duration="8.28" data-track-index="7" data-volume="1.0" preload="auto"></audio>
+    <audio id="voice6" src="./assets/voice_06.wav" data-start="38.4" data-duration="7.27" data-track-index="8" data-volume="1.0" preload="auto"></audio>
+    <audio id="voice7" src="./assets/voice_07.wav" data-start="45.8" data-duration="7.34" data-track-index="10" data-volume="1.0" preload="auto"></audio>
+
+  </div>
+
+  <script>
+    const DURATION = 54.0;
+    const scenes = ["s1", "s2", "s3", "s4", "s5", "s6", "s7"];
+    
+    scenes.forEach((id, idx) => {
+      const el = document.getElementById(id);
+      el.style.opacity = idx === 0 ? "1" : "0";
+      el.style.visibility = idx === 0 ? "visible" : "hidden";
+    });
+
+    const tl = gsap.timeline({ paused: true });
+    const clock = { t: 0 };
+    tl.to(clock, { t: DURATION, duration: DURATION, ease: "none" }, 0);
+
+    // Scene Cuts Timeline
+    const cutMoments = [
+      { at: 7.4, from: "s1", to: "s2" },
+      { at: 15.2, from: "s2", to: "s3" },
+      { at: 22.0, from: "s3", to: "s4" },
+      { at: 30.1, from: "s4", to: "s5" },
+      { at: 38.4, from: "s5", to: "s6" },
+      { at: 45.8, from: "s6", to: "s7" }
+    ];
+
+    cutMoments.forEach((cut) => {
+      tl.set("#" + cut.from, { visibility: "hidden" }, cut.at);
+      tl.set("#" + cut.to, { visibility: "visible" }, cut.at);
+      tl.to("#" + cut.to, { opacity: 1, duration: 0.05, ease: "none" }, cut.at);
+      tl.fromTo(
+        "#flash",
+        { opacity: 0.55 },
+        { opacity: 0, duration: 0.16, ease: "power2.out", immediateRender: false },
+        cut.at
+      );
+    });
+
+    // SCENE 1 ANIMATIONS (0 - 7.4s)
+    tl.from("#s1 .headline", { opacity: 0, y: 40, duration: 0.7, ease: "expo.out" }, 0.25);
+    tl.from("#s1 .central-viewport", { opacity: 0, scale: 0.94, duration: 0.8, ease: "power3.out" }, 0.3);
+    tl.from("#s1 .lower-section", { opacity: 0, y: 25, duration: 0.6, ease: "power2.out" }, 0.6);
+
+    // SCENE 2 ANIMATIONS (7.4 - 15.2s)
+    tl.from("#s2 .headline", { opacity: 0, y: 35, duration: 0.6, ease: "expo.out" }, 7.5);
+    tl.from("#s2 .central-viewport", { opacity: 0, scale: 0.95, duration: 0.7, ease: "power2.out" }, 7.5);
+    tl.from("#s2 .narrative", { opacity: 0, y: 20, duration: 0.5, ease: "power2.out" }, 7.8);
+    tl.from("#s2 .spec-item", { opacity: 0, y: 15, duration: 0.4, stagger: 0.1, ease: "power2.out" }, 8.0);
+
+    // SCENE 3 ANIMATIONS (15.2 - 22.0s)
+    tl.from("#s3 .headline", { opacity: 0, y: 35, duration: 0.6, ease: "expo.out" }, 15.3);
+    tl.from("#s3 .central-viewport", { opacity: 0, scale: 0.95, duration: 0.7, ease: "power2.out" }, 15.3);
+    tl.from("#s3 .narrative", { opacity: 0, y: 20, duration: 0.5, ease: "power2.out" }, 15.6);
+    tl.from("#s3 .spec-item", { opacity: 0, y: 15, duration: 0.4, stagger: 0.1, ease: "power2.out" }, 15.8);
+
+    // SCENE 4 ANIMATIONS (22.0 - 30.1s)
+    tl.from("#s4 .headline", { opacity: 0, y: 35, duration: 0.6, ease: "expo.out" }, 22.1);
+    tl.from("#s4 .central-viewport", { opacity: 0, scale: 0.95, duration: 0.7, ease: "power2.out" }, 22.1);
+    tl.from("#s4 .narrative", { opacity: 0, y: 20, duration: 0.5, ease: "power2.out" }, 22.4);
+    tl.from("#s4 .spec-item", { opacity: 0, y: 15, duration: 0.4, stagger: 0.1, ease: "power2.out" }, 22.6);
+
+    // SCENE 5 ANIMATIONS (30.1 - 38.4s)
+    tl.from("#s5 .headline", { opacity: 0, y: 35, duration: 0.6, ease: "expo.out" }, 30.2);
+    tl.from("#s5 .central-viewport", { opacity: 0, scale: 0.95, duration: 0.7, ease: "power2.out" }, 30.2);
+    tl.from("#s5 .narrative", { opacity: 0, y: 20, duration: 0.5, ease: "power2.out" }, 30.5);
+    tl.from("#s5 .spec-item", { opacity: 0, y: 15, duration: 0.4, stagger: 0.1, ease: "power2.out" }, 30.7);
+
+    // SCENE 6 ANIMATIONS (38.4 - 45.8s)
+    tl.from("#s6 .headline", { opacity: 0, y: 35, duration: 0.6, ease: "expo.out" }, 38.5);
+    tl.from("#s6 .central-viewport", { opacity: 0, scale: 0.95, duration: 0.7, ease: "power2.out" }, 38.5);
+    tl.from("#s6 .narrative", { opacity: 0, y: 20, duration: 0.5, ease: "power2.out" }, 38.8);
+    tl.from("#s6 .spec-item", { opacity: 0, y: 15, duration: 0.4, stagger: 0.1, ease: "power2.out" }, 39.0);
+
+    // SCENE 7 ANIMATIONS (45.8 - 54.0s)
+    tl.from("#s7 .huge", { opacity: 0, y: 50, duration: 0.7, ease: "expo.out" }, 45.9);
+    tl.from("#s7 .body", { opacity: 0, y: 20, duration: 0.6, ease: "power2.out" }, 46.2);
+    tl.from("#s7 .outro-action", { opacity: 0, scale: 0.95, duration: 0.5, ease: "back.out(1.5)" }, 46.5);
+    tl.to("#s7 .outro-card", { opacity: 0, duration: 0.6, ease: "power2.in" }, 53.2);
+
+    window.__timelines = window.__timelines || {};
+    window.__timelines["main"] = tl;
+  </script>
+</body>
+</html>
